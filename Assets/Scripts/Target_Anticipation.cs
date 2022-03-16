@@ -5,6 +5,12 @@ using UnityEngine;
 public class Target_Anticipation : MonoBehaviour
 {
     [SerializeField] Material material;
+
+    private void OnTriggerEnter(Collider other)
+    {
+        Debug.Log("Beep");
+    }
+
     // Start is called before the first frame update
     void Start()
     {

@@ -158,6 +158,10 @@ PrefabInstance:
       propertyPath: m_FontData.m_AlignByGeometry
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6745231397838106824, guid: 93c6c95a6e360af44a0a36d79d9576aa, type: 3}
+      propertyPath: m_Color.a
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6745231397917114488, guid: 93c6c95a6e360af44a0a36d79d9576aa, type: 3}
       propertyPath: m_Pivot.x
       value: 0
