@@ -8,14 +8,15 @@ public class Target : MonoBehaviour
 
     public void Start()
     {
-        DisableTarget();
+        //DisableTarget();
     }
     public void Hit()
     {
-        if (TargetShootable())
-        {
-            transform.position = TargetBounds.Instance.GetRandomPosition();
-        }
+        transform.position = TargetBounds.Instance.GetRandomPosition();
+        //if (TargetShootable())
+        //{
+        //    transform.position = TargetBounds.Instance.GetRandomPosition();
+        //}
     }
 
     public void EnableTarget()

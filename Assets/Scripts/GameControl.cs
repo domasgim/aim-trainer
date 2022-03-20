@@ -11,10 +11,6 @@ public class GameControl : MonoBehaviour
     [SerializeField]
     private Texture2D cursorTexture;
 
-    private Vector2 cursorHotspot;
-
-    private Vector2 mousePos;
-
     [SerializeField]
     private Text getReadyText;
 
@@ -32,8 +28,6 @@ public class GameControl : MonoBehaviour
 
     [SerializeField]
     private int targetsAmmountInitial;
-
-    private Vector2 targetRandomPosition;
 
     private bool sessionStarted = false;
 
