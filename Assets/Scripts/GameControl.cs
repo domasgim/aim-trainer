@@ -24,13 +24,13 @@ public class GameControl : MonoBehaviour
     private float accuracy;
     private float currentTime;
 
-    enum gameStatusEnum
+    public enum gameStatusEnum
     {
         STANDBY,
         STARTED,
         FINISHED
     }
-    private gameStatusEnum gameStatus = gameStatusEnum.STANDBY;
+    public gameStatusEnum gameStatus = gameStatusEnum.STANDBY;
 
     // Start is called before the first frame update
     void Start()
@@ -109,7 +109,11 @@ public class GameControl : MonoBehaviour
         scoreText.text = "Score: " + score;
         targetsHitText.text = "Targets Hit: " + targetsHit + "/" + targetsAmmountInitial;
         shotsFiredText.text = "Shots Fired: " + shotsFired;
-        accuracy = targetsHit / shotsFired * 100f;
+        // Else at the start, 'NaN' would be printed out
+        if (shotsFired > 0)
+        {
+            accuracy = targetsHit / shotsFired * 100f;
+        }
         accuracyText.text = "Accuracy: " + accuracy.ToString("N2") + " %";
     }
 
