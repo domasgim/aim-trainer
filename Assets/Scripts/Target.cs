@@ -5,6 +5,7 @@ using UnityEngine;
 public class Target : MonoBehaviour
 {
     [SerializeField] Material material;
+    [SerializeField] GameControl gameControl;
 
     public void Start()
     {

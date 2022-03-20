@@ -2,42 +2,41 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 
 public class GameControl : MonoBehaviour
 {
     [SerializeField]
-    private GameObject target;
-
-    [SerializeField]
-    private Texture2D cursorTexture;
-
-    [SerializeField]
-    private Text getReadyText;
-
-    [SerializeField]
     private GameObject resultsPanel;
 
     [SerializeField]
-    private Text scoreText, targetsHitText, shotsFiredText, accuracyText;
+    private Text scoreText, targetsHitText, shotsFiredText, accuracyText, currentTimeText;
+
+    [SerializeField]
+    Camera cam;
+
+    [SerializeField]
+    private int targetsAmmountInitial;
 
     public static int score, targetsHit;
 
     private float shotsFired;
     private float accuracy;
-    private int targetsAmmount;
+    private float currentTime;
 
-    [SerializeField]
-    private int targetsAmmountInitial;
-
-    private bool sessionStarted = false;
-
-    [SerializeField] Camera cam;
+    enum gameStatusEnum
+    {
+        STANDBY,
+        STARTED,
+        FINISHED
+    }
+    private gameStatusEnum gameStatus = gameStatusEnum.STANDBY;
 
     // Start is called before the first frame update
     void Start()
     {
-        //targetsAmmountInitial = 5;
-        targetsAmmount = targetsAmmountInitial;
+        currentTime = 0;
+
         score = 0;
         shotsFired = 0;
         targetsHit = 0;
@@ -47,51 +46,80 @@ public class GameControl : MonoBehaviour
         scoreText.text = "Score: " + score;
         targetsHitText.text = "Targets Hit: " + targetsHit + "/" + targetsAmmountInitial;
         shotsFiredText.text = "Shots Fired: " + shotsFired;
-        //accuracy = targetsHit / shotsFired * 100f;
         accuracyText.text = "Accuracy: " + accuracy.ToString("N2") + " %";
+        currentTimeText.text = "Time: -";
     }
 
     // Update is called once per frame
     void Update()
     {
+        PrintTime();
+
+        // Mouse 1 pressed
         if (Input.GetMouseButtonDown(0))
         {
-            if (sessionStarted)
-            {
-                shotsFired++;
-            }
             Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f));
             if (Physics.Raycast(ray, out RaycastHit hit))
             {
                 Target target = hit.collider.gameObject.GetComponent<Target>();
 
-                if (target != null && targetsAmmount > 0)
+                // A target is hit
+                if (target != null)
                 {
-                    target.Hit();
-                    if (!sessionStarted)
+                    if (gameStatus == gameStatusEnum.STANDBY)
                     {
-                        target.EnableTarget();
-                        sessionStarted = true;
-                    } else
+                        gameStatus = gameStatusEnum.STARTED;
+                        target.Hit();
+
+                        // This is nessecary because it doesn't make sense
+                        // to count a shot if it is fired to start the game
+                        shotsFired--;
+                    }
+                    else if (gameStatus == gameStatusEnum.STARTED)
                     {
                         score += 10;
                         targetsHit++;
-                        targetsAmmount--;
+
+                        // If all the targets are hit
+                        if (targetsHit == targetsAmmountInitial)
+                        {
+                            gameStatus = gameStatusEnum.FINISHED;
+
+                            // We add a last shot because the shot counting
+                            // logic will not work after this line
+                            shotsFired++;
+                        } else
+                        {
+                            target.Hit();
+                        }
                     }
-                } 
-                else if (target != null && targetsAmmount == 0 && sessionStarted)
-                {
-                    shotsFired--;
-                    target.DisableTarget();
-                    sessionStarted = false;
                 }
             }
-            scoreText.text = "Score: " + score;
-            targetsHitText.text = "Targets Hit: " + targetsHit + "/" + targetsAmmountInitial;
-            shotsFiredText.text = "Shots Fired: " + shotsFired;
-            accuracy = targetsHit / shotsFired * 100f;
-            accuracyText.text = "Accuracy: " + accuracy.ToString("N2") + " %";
-            Debug.Log("Shots fired: " + shotsFired);
+            if (gameStatus == gameStatusEnum.STARTED)
+            {
+                shotsFired++;
+            }
+
+            PrintResults();
         }
+    }
+
+    private void PrintResults()
+    {
+        scoreText.text = "Score: " + score;
+        targetsHitText.text = "Targets Hit: " + targetsHit + "/" + targetsAmmountInitial;
+        shotsFiredText.text = "Shots Fired: " + shotsFired;
+        accuracy = targetsHit / shotsFired * 100f;
+        accuracyText.text = "Accuracy: " + accuracy.ToString("N2") + " %";
+    }
+
+    private void PrintTime()
+    {
+        if (gameStatus == gameStatusEnum.STARTED)
+        {
+            currentTime = currentTime + Time.deltaTime;
+        }
+        TimeSpan time = TimeSpan.FromSeconds(currentTime);
+        currentTimeText.text = "Time: " + time.ToString("mm':'ss':'fff");
     }
 }
