@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class Target : MonoBehaviour
 {
@@ -23,14 +24,37 @@ public class Target : MonoBehaviour
             DisableTarget();
         }
     }
-    public int Hit()
+    public int Hit(Vector3 hit)
     {
+        int score = 0;
         if (TargetShootable())
         {
+            float xDiff = (hit.x - transform.position.x) * 100;
+            float yDiff = (hit.y - transform.position.y) * 100;
+
+            int xRoundedDiff = Math.Abs(((int)Math.Round(xDiff / 20.0)) * 20);
+            int yRoundedDiff = Math.Abs(((int)Math.Round(yDiff / 20.0)) * 20);
+
+
+            Debug.Log("X diff: " + xRoundedDiff);
+            Debug.Log("Y diff: " + yRoundedDiff);
+
+            if (xRoundedDiff == 40 || yRoundedDiff == 40)
+            {
+                score = 25;
+            }
+            else if (xRoundedDiff == 20 || yRoundedDiff == 20)
+            {
+                score = 50;
+            }
+            else if (xRoundedDiff == 0 || yRoundedDiff == 0)
+            {
+                score = 100;
+            }
+
             transform.position = TargetBounds.Instance.GetRandomPosition();
-            return 1;
         }
-        return 0;
+        return score;
     }
 
     public void EnableTarget()

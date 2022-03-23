@@ -17,7 +17,7 @@ public class TargetShooter : MonoBehaviour
 
                 if (target != null)
                 {
-                    target.Hit();
+                    target.Hit(hit.point);
                 }
             }
         }

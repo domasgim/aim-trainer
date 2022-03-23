@@ -77,7 +77,7 @@ public class GameControl : MonoBehaviour
                     {
                         gameStatus = gameStatusEnum.STARTED;
                         target.EnableTarget();
-                        target.Hit();
+                        target.Hit(hit.point);
 
                         // This is nessecary because it doesn't make sense
                         // to count a shot if it is fired to start the game
@@ -85,7 +85,7 @@ public class GameControl : MonoBehaviour
                     }
                     else if (gameStatus == gameStatusEnum.STARTED)
                     {
-                        score += 10;
+                        //score += 10;
                         targetsHit++;
 
                         // If all the targets are hit
@@ -98,7 +98,7 @@ public class GameControl : MonoBehaviour
                             shotsFired++;
                         } else
                         {
-                            target.Hit();
+                            score += target.Hit(hit.point);
                         }
                     }
                 }
