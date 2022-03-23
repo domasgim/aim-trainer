@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 
-public class GameControl : MonoBehaviour
+public class GameControl_Anticipation : MonoBehaviour
 {
     [SerializeField]
     private GameObject resultsPanel;
@@ -22,7 +22,7 @@ public class GameControl : MonoBehaviour
 
     private float shotsFired;
     private float accuracy;
-    private float currentTime;
+    public float currentTime;
 
     public enum gameStatusEnum
     {
@@ -30,7 +30,21 @@ public class GameControl : MonoBehaviour
         STARTED,
         FINISHED
     }
+    public enum targetStatusEnum
+    {
+        TARGETS_DISABLED,
+        TARGETS_ENABLED
+    }
+
+    public enum targetMoveStatusEnum
+    {
+        TARGET_START,
+        TARGET_STOP
+    }
+
     public gameStatusEnum gameStatus = gameStatusEnum.STANDBY;
+    public targetStatusEnum targetStatus = targetStatusEnum.TARGETS_DISABLED;
+    public targetMoveStatusEnum targetMoveStatus = targetMoveStatusEnum.TARGET_STOP;
 
     // Start is called before the first frame update
     void Start()
@@ -61,7 +75,7 @@ public class GameControl : MonoBehaviour
             Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f));
             if (Physics.Raycast(ray, out RaycastHit hit))
             {
-                Target target = hit.collider.gameObject.GetComponent<Target>();
+                Target_Anticipation target = hit.collider.gameObject.GetComponent<Target_Anticipation>();
 
                 // A target is hit
                 if (target != null)
@@ -69,6 +83,7 @@ public class GameControl : MonoBehaviour
                     if (gameStatus == gameStatusEnum.STANDBY)
                     {
                         gameStatus = gameStatusEnum.STARTED;
+                        //target.EnableTarget();
                         target.Hit();
 
                         // This is nessecary because it doesn't make sense
@@ -77,20 +92,11 @@ public class GameControl : MonoBehaviour
                     }
                     else if (gameStatus == gameStatusEnum.STARTED)
                     {
-                        score += 10;
-                        targetsHit++;
-
-                        // If all the targets are hit
-                        if (targetsHit == targetsAmmountInitial)
+                        if (target.Hit() == 1)
                         {
-                            gameStatus = gameStatusEnum.FINISHED;
-
-                            // We add a last shot because the shot counting
-                            // logic will not work after this line
-                            shotsFired++;
-                        } else
-                        {
-                            target.Hit();
+                            score += 10;
+                            targetsHit++;
+                            //currentTime = 0f;
                         }
                     }
                 }
@@ -99,7 +105,6 @@ public class GameControl : MonoBehaviour
             {
                 shotsFired++;
             }
-
             PrintResults();
         }
     }
@@ -119,7 +124,7 @@ public class GameControl : MonoBehaviour
 
     private void PrintTime()
     {
-        if (gameStatus == gameStatusEnum.STARTED)
+        if (targetStatus == targetStatusEnum.TARGETS_ENABLED)
         {
             currentTime = currentTime + Time.deltaTime;
         }

@@ -4,17 +4,15 @@ using UnityEngine;
 
 public class BezierFollow : MonoBehaviour
 {
-    [SerializeField]
-    private Transform[] routes;
+    [SerializeField] private Transform[] routes;
+    [SerializeField] GameControl_Anticipation gameControl;
+    [SerializeField] private float speedModifier;
 
     private int routeToGo;
 
     private float tParam;
 
-    private Vector3 catPosition;
-
-    [SerializeField]
-    private float speedModifier;
+    private Vector3 targetPosition;
 
     private bool coroutineAllowed;
 
@@ -23,16 +21,18 @@ public class BezierFollow : MonoBehaviour
     {
         routeToGo = 0;
         tParam = 0;
-        // speedModifier = 0.5f;
         coroutineAllowed = true;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (coroutineAllowed)
+        if (gameControl.gameStatus == GameControl_Anticipation.gameStatusEnum.STARTED)
         {
-            StartCoroutine(GoByTheRoutine(routeToGo));
+            if (coroutineAllowed)
+            {
+                StartCoroutine(GoByTheRoutine(routeToGo));
+            }
         }
     }
 
@@ -49,12 +49,12 @@ public class BezierFollow : MonoBehaviour
         {
             tParam += Time.deltaTime * speedModifier;
 
-            catPosition = Mathf.Pow(1 - tParam, 3) * p0 +
+            targetPosition = Mathf.Pow(1 - tParam, 3) * p0 +
                 3 * Mathf.Pow(1 - tParam, 2) * tParam * p1 +
                 3 * (1 - tParam) * Mathf.Pow(tParam, 2) * p2 +
                 Mathf.Pow(tParam, 3) * p3;
 
-            transform.position = catPosition;
+            transform.position = targetPosition;
             yield return new WaitForEndOfFrame();
         }
 
@@ -67,6 +67,8 @@ public class BezierFollow : MonoBehaviour
             routeToGo = 0;
         }
 
-        coroutineAllowed = true;
+        // If set to true, after completing the bezier curve, the target's
+        // potition will be restarted
+        // coroutineAllowed = true;
     }
 }

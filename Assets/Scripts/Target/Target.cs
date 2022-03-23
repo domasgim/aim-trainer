@@ -9,7 +9,7 @@ public class Target : MonoBehaviour
 
     public void Start()
     {
-        //DisableTarget();
+        DisableTarget();
     }
 
     void Update()
@@ -23,9 +23,14 @@ public class Target : MonoBehaviour
             DisableTarget();
         }
     }
-    public void Hit()
+    public int Hit()
     {
-        transform.position = TargetBounds.Instance.GetRandomPosition();
+        if (TargetShootable())
+        {
+            transform.position = TargetBounds.Instance.GetRandomPosition();
+            return 1;
+        }
+        return 0;
     }
 
     public void EnableTarget()
@@ -36,5 +41,12 @@ public class Target : MonoBehaviour
     public void DisableTarget()
     {
         material.color = Color.blue;
+    }
+
+    public bool TargetShootable()
+    {
+        if (material.color == Color.red)
+            return true;
+        return false;
     }
 }

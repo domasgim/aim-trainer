@@ -509,6 +509,10 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: -8.46
       objectReference: {fileID: 0}
+    - target: {fileID: 4770448373821897830, guid: 4f131f0c9a5e87f43acc55d0f8cdf2f1, type: 3}
+      propertyPath: gameControl
+      value: 
+      objectReference: {fileID: 1181110637}
     - target: {fileID: 7068104573233188273, guid: 4f131f0c9a5e87f43acc55d0f8cdf2f1, type: 3}
       propertyPath: m_LocalScale.x
       value: 26.67
@@ -783,6 +787,8 @@ MonoBehaviour:
   currentTimeText: {fileID: 1034439402}
   cam: {fileID: 2086231457}
   targetsAmmountInitial: 5
+  gameStatus: 0
+  targetStatus: 0
 --- !u!4 &1181110638
 Transform:
   m_ObjectHideFlags: 0
