@@ -83,25 +83,31 @@ public class GameControl_Anticipation : MonoBehaviour
                     if (gameStatus == gameStatusEnum.STANDBY)
                     {
                         gameStatus = gameStatusEnum.STARTED;
-                        //target.EnableTarget();
-                        target.Hit();
-
-                        // This is nessecary because it doesn't make sense
-                        // to count a shot if it is fired to start the game
-                        shotsFired--;
+                        target.Hit(hit.point);
                     }
                     else if (gameStatus == gameStatusEnum.STARTED)
                     {
-                        if (target.Hit() == 1)
+                        int hitReturn = 0;
+                        if ((hitReturn = target.Hit(hit.point)) != 0)
                         {
-                            score += 10;
+                            score += hitReturn;
                             targetsHit++;
                             //currentTime = 0f;
+                        }
+
+                        // If all the targets are hit
+                        if (targetsHit == targetsAmmountInitial)
+                        {
+                            gameStatus = gameStatusEnum.FINISHED;
+
+                            // We add a last shot because the shot counting
+                            // logic will not work after this line
+                            shotsFired++;
                         }
                     }
                 }
             }
-            if (gameStatus == gameStatusEnum.STARTED)
+            if (targetStatus == targetStatusEnum.TARGETS_ENABLED)
             {
                 shotsFired++;
             }

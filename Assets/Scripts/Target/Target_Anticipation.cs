@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class Target_Anticipation : MonoBehaviour
 {
@@ -37,14 +38,15 @@ public class Target_Anticipation : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (gameControl.gameStatus == GameControl_Anticipation.gameStatusEnum.STARTED)
+        if (gameControl.gameStatus == GameControl_Anticipation.gameStatusEnum.FINISHED)
         {
-            
+            StopAllCoroutines();
         }
     }
 
-    public int Hit()
+    public int Hit(Vector3 hit)
     {
+        int score = 0;
         // NEREIK TIKRINT AR STARTED
         if (gameControl.targetStatus == GameControl_Anticipation.targetStatusEnum.TARGETS_DISABLED && !coroutineStarted)
         {
@@ -54,6 +56,25 @@ public class Target_Anticipation : MonoBehaviour
         } 
         else if (TargetShootable() && coroutineStarted)
         {
+            float xDiff = (hit.x - transform.position.x) * 100;
+            float yDiff = (hit.y - transform.position.y) * 100;
+
+            int xRoundedDiff = Math.Abs(((int)Math.Round(xDiff / 20.0)) * 20);
+            int yRoundedDiff = Math.Abs(((int)Math.Round(yDiff / 20.0)) * 20);
+
+            if (xRoundedDiff == 40 || yRoundedDiff == 40)
+            {
+                score = 25;
+            }
+            else if (xRoundedDiff == 20 || yRoundedDiff == 20)
+            {
+                score = 50;
+            }
+            else if (xRoundedDiff == 0 || yRoundedDiff == 0)
+            {
+                score = 100;
+            }
+
             DisableTarget();
             gameControl.targetStatus = GameControl_Anticipation.targetStatusEnum.TARGETS_DISABLED;
             StopAllCoroutines();
@@ -62,9 +83,8 @@ public class Target_Anticipation : MonoBehaviour
             tParam = 0;
             StartCoroutine(WaitBeforeRestarting());
             coroutineStarted = true;
-            return 1;
         }
-        return 0;
+        return score;
     }
 
     public void EnableTarget()
