@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class MainMenu : MonoBehaviour
+public class PlayMenu : MonoBehaviour
 {
     public void PlayGameBasic()
     {
@@ -16,10 +16,5 @@ public class MainMenu : MonoBehaviour
     public void PlayGameMoving()
     {
         SceneManager.LoadScene(3);
-    }
-
-    public void QuitGame()
-    {
-        Debug.Log("Quit!");
     }
 }
