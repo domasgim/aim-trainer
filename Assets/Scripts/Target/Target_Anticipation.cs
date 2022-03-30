@@ -139,7 +139,7 @@ public class Target_Anticipation : MonoBehaviour
 
         // If set to true, after completing the bezier curve, the target's
         // potition will be restarted
-        // coroutineAllowed = true;
+        coroutineAllowed = true;
     }
 
     private IEnumerator WaitBeforeRestarting()
