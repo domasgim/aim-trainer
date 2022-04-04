@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using PathCreation;
+using PathCreation.Examples;
+using UnityEngine;
+using Random = System.Random;
 
 public class GameControl_Anticipation : MonoBehaviour
 {
@@ -17,6 +21,10 @@ public class GameControl_Anticipation : MonoBehaviour
 
     [SerializeField]
     private int targetsAmmountInitial;
+
+    public PathFollower followerPrefab;
+    public Transform spawnPoint;
+    public PathCreator[] pathPrefabs;
 
     public static int score, targetsHit;
 
@@ -84,25 +92,28 @@ public class GameControl_Anticipation : MonoBehaviour
                     {
                         gameStatus = gameStatusEnum.STARTED;
                         target.Hit(hit.point);
+                        SpawnRandomPath();
                     }
                     else if (gameStatus == gameStatusEnum.STARTED)
                     {
                         int hitReturn = 0;
                         if ((hitReturn = target.Hit(hit.point)) != 0)
                         {
-                            score += hitReturn;
-                            targetsHit++;
-                            //currentTime = 0f;
-                        }
-
-                        // If all the targets are hit
-                        if (targetsHit == targetsAmmountInitial)
-                        {
-                            gameStatus = gameStatusEnum.FINISHED;
-
-                            // We add a last shot because the shot counting
-                            // logic will not work after this line
-                            shotsFired++;
+                            if (targetsHit < targetsAmmountInitial)
+                            {
+                                score += hitReturn;
+                                targetsHit++;
+                                if (targetsHit == targetsAmmountInitial)
+                                {
+                                    Debug.Log("VISKAS");
+                                    gameStatus = gameStatusEnum.FINISHED;
+                                    targetStatus = targetStatusEnum.TARGETS_DISABLED;
+                                    target.DisableTarget();
+                                } else
+                                {
+                                    SpawnRandomPath();
+                                }
+                            } 
                         }
                     }
                 }
@@ -136,5 +147,28 @@ public class GameControl_Anticipation : MonoBehaviour
         }
         TimeSpan time = TimeSpan.FromSeconds(currentTime);
         currentTimeText.text = "Time: " + time.ToString("mm':'ss':'fff");
+    }
+
+    public void SpawnRandomPath()
+    {
+        DestroyClone();
+        Random random = new Random();
+        int index = random.Next(0, pathPrefabs.Length);
+        PathCreator p = pathPrefabs[index];
+        var path = Instantiate(p, spawnPoint.position, spawnPoint.rotation);
+        var follower = Instantiate(followerPrefab);
+        //followerPrefab.pathCreator = path;
+        follower.pathCreator = path;
+        path.transform.parent = spawnPoint;
+    }
+
+    public void DestroyClone()
+    {
+        string name = "Follower_target(Clone)";
+        GameObject go = GameObject.Find(name);
+        if (go)
+        {
+            Destroy(go.gameObject);
+        }
     }
 }
