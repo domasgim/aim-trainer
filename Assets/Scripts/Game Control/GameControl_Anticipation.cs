@@ -99,18 +99,22 @@ public class GameControl_Anticipation : MonoBehaviour
                         int hitReturn = 0;
                         if ((hitReturn = target.Hit(hit.point)) != 0)
                         {
+                            // TODO: save time here
+                            // restart timer
+                            currentTime = 0f;
                             if (targetsHit < targetsAmmountInitial)
                             {
                                 score += hitReturn;
                                 targetsHit++;
                                 if (targetsHit == targetsAmmountInitial)
                                 {
-                                    Debug.Log("VISKAS");
+                                    shotsFired++;
                                     gameStatus = gameStatusEnum.FINISHED;
                                     targetStatus = targetStatusEnum.TARGETS_DISABLED;
                                     target.DisableTarget();
                                 } else
                                 {
+                                    shotsFired++;
                                     SpawnRandomPath();
                                 }
                             } 

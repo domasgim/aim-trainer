@@ -1164,7 +1164,7 @@ MonoBehaviour:
   accuracyText: {fileID: 1738949711}
   currentTimeText: {fileID: 1556292967}
   cam: {fileID: 2096408613}
-  targetsAmmountInitial: 2
+  targetsAmmountInitial: 3
   followerPrefab: {fileID: 72017260}
   spawnPoint: {fileID: 769641337}
   pathPrefabs:
