@@ -1171,6 +1171,7 @@ MonoBehaviour:
   - {fileID: 1709191536}
   - {fileID: 1479434813}
   currentTime: 0
+  singleTargetLifeTime: 3
   gameStatus: 0
   targetStatus: 0
   targetMoveStatus: 1
@@ -1447,7 +1448,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7629748162489918682, guid: a1a8fa7208b3b2f498b862042f08c0a3, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -9.49
+      value: -5.26
       objectReference: {fileID: 0}
     - target: {fileID: 7629748162489918682, guid: a1a8fa7208b3b2f498b862042f08c0a3, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1455,7 +1456,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7629748162489918682, guid: a1a8fa7208b3b2f498b862042f08c0a3, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 19.9
+      value: 28.77
       objectReference: {fileID: 0}
     - target: {fileID: 7629748162489918682, guid: a1a8fa7208b3b2f498b862042f08c0a3, type: 3}
       propertyPath: m_LocalRotation.w

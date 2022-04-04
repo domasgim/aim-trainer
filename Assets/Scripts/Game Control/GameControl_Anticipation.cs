@@ -26,11 +26,22 @@ public class GameControl_Anticipation : MonoBehaviour
     public Transform spawnPoint;
     public PathCreator[] pathPrefabs;
 
-    public static int score, targetsHit;
+    public static int score;
+
+    /// <summary>
+    /// Number of targets hit by the player
+    /// </summary>
+    public static int targetsHit;
+
+    /// <summary>
+    /// Total targets including missed ones
+    /// </summary>
+    public static int targetNumber;
 
     private float shotsFired;
     private float accuracy;
     public float currentTime;
+    public float singleTargetLifeTime;
 
     public enum gameStatusEnum
     {
@@ -62,6 +73,7 @@ public class GameControl_Anticipation : MonoBehaviour
         score = 0;
         shotsFired = 0;
         targetsHit = 0;
+        targetNumber = 0;
         accuracy = 0f;
 
         resultsPanel.SetActive(true);
@@ -93,6 +105,7 @@ public class GameControl_Anticipation : MonoBehaviour
                         gameStatus = gameStatusEnum.STARTED;
                         target.Hit(hit.point);
                         SpawnRandomPath();
+                        DestroyTrigger();
                     }
                     else if (gameStatus == gameStatusEnum.STARTED)
                     {
@@ -106,6 +119,7 @@ public class GameControl_Anticipation : MonoBehaviour
                             {
                                 score += hitReturn;
                                 targetsHit++;
+                                targetNumber++;
                                 if (targetsHit == targetsAmmountInitial)
                                 {
                                     shotsFired++;
@@ -127,6 +141,24 @@ public class GameControl_Anticipation : MonoBehaviour
                 shotsFired++;
             }
             PrintResults();
+        }
+        if (currentTime > singleTargetLifeTime)
+        {
+            targetNumber++;
+            currentTime = 0f;
+            targetStatus = GameControl_Anticipation.targetStatusEnum.TARGETS_DISABLED;
+            SpawnRandomPath();
+        }
+
+        if (targetNumber == targetsAmmountInitial)
+        {
+            gameStatus = gameStatusEnum.FINISHED;
+            targetStatus = targetStatusEnum.TARGETS_DISABLED;
+        }
+
+        if (gameStatus == gameStatusEnum.FINISHED)
+        {
+            Debug.Log("GAME OVER");
         }
     }
 
@@ -175,4 +207,14 @@ public class GameControl_Anticipation : MonoBehaviour
             Destroy(go.gameObject);
         }
     }
+    public void DestroyTrigger()
+    {
+        string name = "Target_Trigger";
+        GameObject go = GameObject.Find(name);
+        if (go)
+        {
+            Destroy(go.gameObject);
+        }
+    }
+
 }
