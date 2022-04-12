@@ -166,6 +166,11 @@ public class GameControl_Anticipation : MonoBehaviour
                 }
                 PrintResults();
             }
+            if (gameStatus != gameStatusEnum.FINISHED)
+            {
+                Cursor.visible = false;
+                Cursor.lockState = CursorLockMode.Locked;
+            }
             if (currentTime > singleTargetLifeTime)
             {
                 targetNumber++;

@@ -1,0 +1,73 @@
+{
+    "levels": [
+      {
+        "name": "Basic targets",
+        "sessions" : [
+            {
+                "score": 500,
+                "time_to_kill": 400, // milliseconds (ms) between each target (average)
+                "kills_per_sec": 3,
+                "accuracy": 20, // percent
+                "time": "00:01:23:11",
+                "targets_missed": 2,
+                "timestamp": "..." // system time
+            },
+            {
+                "score": 500,
+                "time_to_kill": 400, // milliseconds (ms) between each target (average)
+                "kills_per_sec": 3,
+                "accuracy": 20, // percent
+                "time": "00:01:23:11",
+                "targets_missed": 2,
+                "timestamp": "..." // system time
+            }
+        ]
+      },
+      {
+        "name": "Moving targets",
+        "sessions" : [
+            {
+                "score": 500,
+                "time_to_kill": 400, // milliseconds (ms) between each target (average)
+                "kills_per_sec": 3,
+                "accuracy": 20, // percent
+                "time": "00:01:23:11",
+                "targets_missed": 2,
+                "timestamp": "..." // system time
+            },
+            {
+                "score": 500,
+                "time_to_kill": 400, // milliseconds (ms) between each target (average)
+                "kills_per_sec": 3,
+                "accuracy": 20, // percent
+                "time": "00:01:23:11",
+                "targets_missed": 2,
+                "timestamp": "..." // system time
+            }
+        ]
+      },
+      {
+        "name": "Anticipation",
+        "sessions" : [
+            {
+                "score": 500,
+                "time_to_kill": 400, // milliseconds (ms) between each target (average)
+                "kills_per_sec": 3,
+                "accuracy": 20, // percent
+                "time": "00:01:23:11",
+                "targets_missed": 2,
+                "timestamp": "..." // system time
+            },
+            {
+                "score": 500,
+                "time_to_kill": 400, // milliseconds (ms) between each target (average)
+                "kills_per_sec": 3,
+                "accuracy": 20, // percent
+                "time": "00:01:23:11",
+                "targets_missed": 2,
+                "timestamp": "..." // system time
+            }
+        ]
+      }
+    ]
+}

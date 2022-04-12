@@ -1,0 +1,23 @@
+{
+    "levels": [
+      {
+        "name": "Basic targets",
+        "play-count": 5,
+        "high-score": 500,
+        "average-score": 241,
+        "average-time-to-kill": 400, // milliseconds (ms) between each target (average)
+        "average-kills-per-sec": 3,
+        "average-time": "00:01:23:11",
+        "heatmap-stats-score": "70%", // max_score - average_score
+        "heatmap-stats-accuracy": "70%", // 100 - average_accuracy
+        "heatmap-stats-time-to-kill": "70%", // ((time-to-kill - ttk_min) * 100 / ttk_max - ttk_min)
+        "heatmap-kills-per-sec": "70%", // ((kills-per-sec - kps_min) * 100 / kps_max - kps_min)
+        "time": "00:01:35:07"
+      },
+      {
+        "name": "Justin Doe",
+        "phone": "877-123-1212",
+        "relationship": "parent"
+      }
+    ]
+}

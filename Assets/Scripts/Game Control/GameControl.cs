@@ -7,6 +7,8 @@ using TMPro;
 
 public class GameControl : MonoBehaviour
 {
+    public Target targetObj;
+
     [SerializeField]
     private GameObject resultsPanel;
 
@@ -26,16 +28,23 @@ public class GameControl : MonoBehaviour
     Camera cam;
 
     [SerializeField]
-    private int targetsAmmountInitial;
+    public int targetsAmmountInitial;
 
     [SerializeField]
     public GameObject playerFollowCamera;
 
-    public static int score, targetsHit;
+    public int score, targetsHit;
+
+    /// <summary>
+    /// Total targets including missed ones
+    /// </summary>
+    public static int targetNumber;
 
     private float shotsFired;
-    private float accuracy;
-    private float currentTime;
+    public float accuracy;
+    public float currentTime;
+    private float targetTime;
+    public float singleTargetLifeTime;
 
 
     public enum gameStatusEnum
@@ -63,7 +72,12 @@ public class GameControl : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        int unixTimestamp = (int)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
+        Debug.Log("Unix timestamp: " + unixTimestamp);
+        targetsHit = 0;
+        targetNumber = 0;
         currentTime = 0;
+        targetTime = 0;
 
         score = 0;
         shotsFired = 0;
@@ -84,6 +98,11 @@ public class GameControl : MonoBehaviour
     {
         if (pauseStatus != pauseStatusEnum.PAUSED)
         {
+            if (targetNumber >= targetsAmmountInitial)
+            {
+                pauseStatus = pauseStatusEnum.PAUSED;
+                gameStatus = gameStatusEnum.FINISHED;
+            }
             PrintTime();
 
             // Mouse 1 pressed
@@ -102,6 +121,7 @@ public class GameControl : MonoBehaviour
                             gameStatus = gameStatusEnum.STARTED;
                             target.EnableTarget();
                             target.Hit(hit.point);
+                            targetTime = 0f;
 
                             // This is nessecary because it doesn't make sense
                             // to count a shot if it is fired to start the game
@@ -111,13 +131,15 @@ public class GameControl : MonoBehaviour
                         {
                             //score += 10;
                             targetsHit++;
+                            targetNumber++;
 
                             // If all the targets are hit
-                            if (targetsHit == targetsAmmountInitial)
+                            if (targetNumber == targetsAmmountInitial)
                             {
                                 pauseStatus = pauseStatusEnum.PAUSED;
                                 gameStatus = gameStatusEnum.FINISHED;
                                 score += target.Hit(hit.point);
+                                targetTime = 0f;
 
                                 // We add a last shot because the shot counting
                                 // logic will not work after this line
@@ -126,6 +148,7 @@ public class GameControl : MonoBehaviour
                             else
                             {
                                 score += target.Hit(hit.point);
+                                targetTime = 0f;
                             }
                         }
                     }
@@ -136,6 +159,13 @@ public class GameControl : MonoBehaviour
                 }
 
                 PrintResults();
+
+            }
+            if (targetTime > singleTargetLifeTime)
+            {
+                targetNumber++;
+                targetTime = 0f;
+                targetObj.Hit(new Vector3(0, 0, 0));
             }
             if (gameStatus != gameStatusEnum.FINISHED)
             {
@@ -177,8 +207,10 @@ public class GameControl : MonoBehaviour
         if (gameStatus == gameStatusEnum.STARTED)
         {
             currentTime = currentTime + Time.deltaTime;
+            targetTime = targetTime + Time.deltaTime;
         }
         TimeSpan time = TimeSpan.FromSeconds(currentTime);
+        //TimeSpan time = TimeSpan.FromSeconds(targetTime);
         currentTimeText.text = "Time: " + time.ToString("mm':'ss':'fff");
         finalCurrentTimeText.text = "Time: " + time.ToString("mm':'ss':'fff");
     }
