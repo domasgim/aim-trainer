@@ -8,7 +8,7 @@ public class SessionData_instance
     public string level_name;
     public int score;
     public float accuracy;
-    public float time_to_kill; // seconds
+    public int time_to_kill; // milliseconds
     public float kills_per_sec;
     public int targets_missed;
     public float session_time;

@@ -79,14 +79,13 @@ public class PauseMenu : MonoBehaviour
         sessionData_instance.level_name = "Basic targets";
         sessionData_instance.score = gameControl.score;
         sessionData_instance.accuracy = gameControl.accuracy;
-        sessionData_instance.time_to_kill = 0;
-        sessionData_instance.kills_per_sec = 0;
+        sessionData_instance.time_to_kill = gameControl.time_to_kill / gameControl.targetsHit;
+        sessionData_instance.kills_per_sec = gameControl.targetsHit / gameControl.currentTime;
         sessionData_instance.targets_missed = gameControl.targetsAmmountInitial - gameControl.targetsHit;
         sessionData_instance.session_time = gameControl.currentTime;
         sessionData_instance.unix_timestamp = (int)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
 
         SaveSystem.SaveSession(sessionData_instance);
-        //Debug.Log("Score: " + sessionData_instance.score);
         SceneManager.LoadScene(0);
     }
 

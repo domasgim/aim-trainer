@@ -33,7 +33,7 @@ public class GameControl : MonoBehaviour
     [SerializeField]
     public GameObject playerFollowCamera;
 
-    public int score, targetsHit;
+    public int score, targetsHit, time_to_kill, kills_per_second;
 
     /// <summary>
     /// Total targets including missed ones
@@ -78,6 +78,8 @@ public class GameControl : MonoBehaviour
         targetNumber = 0;
         currentTime = 0;
         targetTime = 0;
+        time_to_kill = 0;
+        kills_per_second = 0;
 
         score = 0;
         shotsFired = 0;
@@ -139,6 +141,7 @@ public class GameControl : MonoBehaviour
                                 pauseStatus = pauseStatusEnum.PAUSED;
                                 gameStatus = gameStatusEnum.FINISHED;
                                 score += target.Hit(hit.point);
+                                time_to_kill = (int)(targetTime * 1000);
                                 targetTime = 0f;
 
                                 // We add a last shot because the shot counting
@@ -148,6 +151,7 @@ public class GameControl : MonoBehaviour
                             else
                             {
                                 score += target.Hit(hit.point);
+                                time_to_kill = (int)(targetTime * 1000);
                                 targetTime = 0f;
                             }
                         }

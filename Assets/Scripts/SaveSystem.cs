@@ -7,38 +7,42 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 public static class SaveSystem
 {
-    private static readonly string SAVE_PATH = Application.dataPath + "/save.txt";
+    private static readonly string SAVE_PATH = Application.persistentDataPath + "/save.txt";
     public static void SaveSession(SessionData_instance sessionData_instance)
     {
         SessionData sessionData = new SessionData();
-        //if(!File.Exists(SAVE_PATH))
-        //{
-        //    sessionData.session_list[0] = sessionData_instance;
-        //}
         sessionData.session_list.Add(sessionData_instance);
+
+        if (File.Exists(SAVE_PATH))
+        {
+            string json_saved = File.ReadAllText(SAVE_PATH);
+            SessionData sessionData_saved = JsonUtility.FromJson<SessionData>(json_saved);
+            sessionData.session_list.AddRange(sessionData_saved.session_list);
+        }
 
         string json = JsonUtility.ToJson(sessionData);
 
-        Debug.Log(json);
+        //foreach (SessionData_instance instance in sessionData.session_list)
+        //{
+        //    Debug.Log("=== Instance ===");
+        //    Debug.Log("Score: " + instance.score);
+        //    Debug.Log("Accuracy: " + instance.accuracy);
+        //    Debug.Log("TTK: " + instance.time_to_kill + "ms");
+        //}
 
-        //File.WriteAllText(path, json);
+        File.WriteAllText(SAVE_PATH, json);
     }
 
     public static SessionData LoadSession()
     {
-        string path = Application.persistentDataPath + "/session.data";
-        if (File.Exists(path))
+        if (File.Exists(SAVE_PATH))
         {
-            BinaryFormatter formatter = new BinaryFormatter();
-            FileStream stream = new FileStream(path, FileMode.Open);
-
-            SessionData data = formatter.Deserialize(stream) as SessionData;
-            stream.Close();
-
-            return data;
+            string json_saved = File.ReadAllText(SAVE_PATH);
+            SessionData sessionData_saved = JsonUtility.FromJson<SessionData>(json_saved);
+            return sessionData_saved;
         } else
         {
-            Debug.LogError("Save file not found in " + path);
+            Debug.LogError("Save file not found in " + SAVE_PATH);
             return null;
         }
     }
