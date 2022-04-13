@@ -8,6 +8,7 @@ public class Menu_Stats_StatHeatmap : MonoBehaviour
 {
     public CanvasRenderer chartMeshRenderer;
     public Material chartMeshMaterial;
+    public Texture2D chartTexture;
 
     public TextMeshProUGUI accuracyText, scoreText, targetsHitText, timeText, kpsText, ttkText;
 
@@ -103,32 +104,77 @@ public class Menu_Stats_StatHeatmap : MonoBehaviour
     {
         Mesh mesh = new Mesh();
 
-        Vector3[] vertices = new Vector3[3];
-        Vector2[] uv = new Vector2[3];
-        int[] triangles = new int[3];
+        Vector3[] vertices = new Vector3[7];
+        Vector2[] uv = new Vector2[7];
+        int[] triangles = new int[3 * 6];
 
         float angleIncrement = 360f / 6;
-        float chartSize = 168f;
-        float chartSize_sides = 160f;
+        float chartSize = 169f;
+        float chartSize_sides = 169f;
+
+        //score = 100;
+        //save_accuracy = 100;
+        //targetsHit = 100;
+
         Vector3 scoreVertex = Quaternion.Euler(0, 0, angleIncrement * 0) * Vector3.up * chartSize * ((float)score / 100);
         int scoreVertexIndex = 1;
         Vector3 accuracyVertex = Quaternion.Euler(0, 0, -angleIncrement * 1) * Vector3.up * chartSize_sides * (float)(save_accuracy / 100);
         int accuracyVertexIndex = 2;
+        Vector3 targetsHitVertex = Quaternion.Euler(0, 0, -angleIncrement * 2) * Vector3.up * chartSize_sides * ((float)targetsHit / 100);
+        int targetsHitVertexIndex = 3;
+        Vector3 timeVertex = Quaternion.Euler(0, 0, -angleIncrement * 3) * Vector3.up * chartSize * ((float)time / 100);
+        int timeVertexIndex = 4;
+        Vector3 killsPerSecondVertex = Quaternion.Euler(0, 0, -angleIncrement * 4) * Vector3.up * chartSize_sides * ((float)killsPerSecond / 100);
+        int killsPerSecondVertexIndex = 5;
+        Vector3 timeToKillVertex = Quaternion.Euler(0, 0, -angleIncrement * 5) * Vector3.up * chartSize_sides * ((float)timeToKill / 100);
+        int timeToKillVertexIndex = 6;
 
-        vertices[0] = Vector3.zero;
-        vertices[scoreVertexIndex] = scoreVertex;
-        vertices[accuracyVertexIndex] = accuracyVertex;
+        vertices[0]                         = Vector3.zero;
+        vertices[scoreVertexIndex]          = scoreVertex;
+        vertices[accuracyVertexIndex]       = accuracyVertex;
+        vertices[targetsHitVertexIndex]     = targetsHitVertex;
+        vertices[timeVertexIndex]           = timeVertex;
+        vertices[killsPerSecondVertexIndex] = killsPerSecondVertex;
+        vertices[timeToKillVertexIndex]     = timeToKillVertex;
+
+        uv[0]                           = Vector2.zero;
+        uv[scoreVertexIndex]            = Vector2.one;
+        uv[accuracyVertexIndex]         = Vector2.one;
+        uv[targetsHitVertexIndex]       = Vector2.one;
+        uv[timeVertexIndex]             = Vector2.one;
+        uv[killsPerSecondVertexIndex]   = Vector2.one;
+        uv[timeToKillVertexIndex]       = Vector2.one;
 
         triangles[0] = 0;
         triangles[1] = scoreVertexIndex;
         triangles[2] = accuracyVertexIndex;
+
+        triangles[3] = 0;
+        triangles[4] = accuracyVertexIndex;
+        triangles[5] = targetsHitVertexIndex;
+
+        triangles[6] = 0;
+        triangles[7] = targetsHitVertexIndex;
+        triangles[8] = timeVertexIndex;
+
+        triangles[9] = 0;
+        triangles[10] = timeVertexIndex;
+        triangles[11] = killsPerSecondVertexIndex;
+
+        triangles[12] = 0;
+        triangles[13] = killsPerSecondVertexIndex;
+        triangles[14] = timeToKillVertexIndex;
+
+        triangles[15] = 0;
+        triangles[16] = timeToKillVertexIndex;
+        triangles[17] = scoreVertexIndex;
 
         mesh.vertices = vertices;
         mesh.uv = uv;
         mesh.triangles = triangles;
 
         chartMeshRenderer.SetMesh(mesh);
-        chartMeshRenderer.SetMaterial(chartMeshMaterial, null);
+        chartMeshRenderer.SetMaterial(chartMeshMaterial, chartTexture);
     }
     public void UpdateStatsHeatmap()
     {
