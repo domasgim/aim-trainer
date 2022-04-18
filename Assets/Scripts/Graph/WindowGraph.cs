@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using AimTrainer.Utils;
 
 public class WindowGraph : MonoBehaviour
 {
@@ -12,16 +13,68 @@ public class WindowGraph : MonoBehaviour
     [SerializeField] private RectTransform dashTemplateX;
     [SerializeField] private RectTransform dashTemplateY;
     private List<GameObject> gameObjectList;
+
+    private int maxVisibleValueAmmountLimit = 5;
     private int maxVisibleValueAmmount = 5;
+    private bool listContainsFloatVals = false;
+    private int gamesPlayed = 0;
 
-    private List<int> valueList_cached;
-    private List<int> valueList1 = new List<int>() { 5, 3, 56, 27, 80, 46, 51, 10, 100, 100 };
-    private List<int> valueList2 = new List<int>() { 80, 46, 72, 20, 30, 50, 40, 15, 6, 5 };
-    private List<int> valueList3 = new List<int>() { 20, 30, 10, 20, 50, 10, 10, 50, 61, 40 };
+    private List<float> valueList_cached;
+    private List<float> valueList1 = new List<float>() { 5, 3, 56, 27, 80, 46, 51, 10, 100, 100 };
+    private List<float> valueList2 = new List<float>() { 80, 46, 72, 20, 30, 50, 40, 15, 6, 5 };
+    private List<float> valueList3 = new List<float>() { 20, 30, 10, 20, 50, 10, 10, 50, 61, 40 };
+    private List<float> valueList4 = new List<float>() { 5f, 3f, 56f, 27f, 80f, 46f, 51f, 10f, 100f, 101.05f };
 
+    private List<float> scoreList = new List<float>();
+    private List<float> timeToKillList = new List<float>();
+    private List<float> accuracyList = new List<float>();
+    private List<float> targetsHitList = new List<float>();
+    private List<float> timeList = new List<float>();
+    private List<float> killsPerSecList = new List<float>();
+
+
+
+    public enum levelEnum
+    {
+        BASIC,
+        ANTICIPATION,
+        MOVING
+    }
+
+    public levelEnum levelType = levelEnum.BASIC;
+
+    // Fill value lists with the appropirate level ones
+    private void LoadSavedStats()
+    {
+        scoreList.Clear();
+        timeToKillList.Clear();
+        gamesPlayed = 0;
+        SessionData sessionData = SaveSystem.LoadSession();
+        foreach (SessionData_instance instance in sessionData.session_list)
+        {
+            if (levelType == levelEnum.BASIC && instance.level_name == "Basic targets")
+            {
+                gamesPlayed++;
+                scoreList.Add(instance.score);
+                accuracyList.Add(instance.accuracy);
+                targetsHitList.Add(LevelStats.BASIC_TARGETS_MAX - instance.targets_missed);
+                timeList.Add(instance.session_time);
+                killsPerSecList.Add(instance.kills_per_sec);
+                timeToKillList.Add(instance.time_to_kill);
+            }
+        }
+        scoreList.Reverse();
+        timeToKillList.Reverse();
+        maxVisibleValueAmmountLimit = gamesPlayed;
+    }
+
+    public void SetLevelType(int levelTypeEnum)
+    {
+        levelType = (levelEnum)levelTypeEnum;
+    }
     public void IncreaseMaxVisibleValueAmmount()
     {
-        if (maxVisibleValueAmmount < valueList1.Count)
+        if (maxVisibleValueAmmount < maxVisibleValueAmmountLimit)
         {
             maxVisibleValueAmmount++;
         }
@@ -36,29 +89,60 @@ public class WindowGraph : MonoBehaviour
         ShowGraph(valueList_cached);
     }
 
-    public void ShowGraph1()
+    public void ShowScoreGraph()
     {
-        valueList_cached = valueList1;
-        ShowGraph(valueList1);
+        listContainsFloatVals = false;
+        LoadSavedStats();
+        valueList_cached = scoreList;
+        ShowGraph(valueList_cached);
     }
 
-    public void ShowGraph2()
+    public void ShowAccuracyGraph()
     {
-        valueList_cached = valueList2;
-        ShowGraph(valueList2);
+        listContainsFloatVals = false;
+        LoadSavedStats();
+        valueList_cached = accuracyList;
+        ShowGraph(valueList_cached);
     }
 
-    public void ShowGraph3()
+    public void ShowTargetsHitGraph()
     {
-        valueList_cached = valueList3;
-        ShowGraph(valueList3);
+        listContainsFloatVals = false;
+        LoadSavedStats();
+        valueList_cached = targetsHitList;
+        ShowGraph(valueList_cached);
+    }
+
+    public void ShowTimeGraph()
+    {
+        listContainsFloatVals = false;
+        LoadSavedStats();
+        valueList_cached = timeList;
+        ShowGraph(valueList_cached);
+    }
+
+    public void ShowKillsPerSecGraph()
+    {
+        listContainsFloatVals = true;
+        LoadSavedStats();
+        valueList_cached = killsPerSecList;
+        ShowGraph(valueList_cached);
+    }
+
+    public void ShowTimeToKillGraph()
+    {
+        listContainsFloatVals = false;
+        LoadSavedStats();
+        valueList_cached = timeToKillList;
+        ShowGraph(valueList_cached);
     }
 
     private void Start()
     {
+        //Grid grid = new Grid(4, 3, 50f);
         gameObjectList = new List<GameObject>();
         valueList_cached = valueList1;
-        //List<int> valueList = new List<int>() { 5, 3, 56, 27, 80, 46, 51, 10, 100, 100 };
+        List<int> valueList = new List<int>() { 5, 3, 56, 27, 80, 46, 51, 10, 100, 100 };
         ShowGraph(valueList_cached);
     }
     private GameObject CreateCircle(Vector2 anchoredPosition)
@@ -74,7 +158,7 @@ public class WindowGraph : MonoBehaviour
         return gameObject;
     }
 
-    private void ShowGraph(List<int> valueList)
+    private void ShowGraph(List<float> valueList)
     {
         // Destroy any contents of a pre-existing graph before
         // creating a new one
@@ -103,7 +187,7 @@ public class WindowGraph : MonoBehaviour
 
         for (int i = valueListStartIndex; i < valueList.Count; i++)
         {
-            int value = valueList[i];
+            float value = valueList[i];
             if (value > yMax)
             {
                 yMax = value;
@@ -166,7 +250,12 @@ public class WindowGraph : MonoBehaviour
             labelY.gameObject.SetActive(true);
             float normalizedValue = i * 1f / separatorCount;
             labelY.anchoredPosition = new Vector2(-7f, normalizedValue * graphHeight);
-            labelY.GetComponent<Text>().text = Mathf.RoundToInt(yMin + (normalizedValue * (yMax - yMin))).ToString();
+            if (listContainsFloatVals) {
+                labelY.GetComponent<Text>().text = (yMin + (normalizedValue * (yMax - yMin))).ToString("0.00");
+            } else
+            {
+                labelY.GetComponent<Text>().text = Mathf.RoundToInt(yMin + (normalizedValue * (yMax - yMin))).ToString();
+            }
             gameObjectList.Add(labelY.gameObject);
 
             RectTransform dashY = Instantiate(dashTemplateY);

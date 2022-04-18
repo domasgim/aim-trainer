@@ -22,14 +22,6 @@ public static class SaveSystem
 
         string json = JsonUtility.ToJson(sessionData);
 
-        //foreach (SessionData_instance instance in sessionData.session_list)
-        //{
-        //    Debug.Log("=== Instance ===");
-        //    Debug.Log("Score: " + instance.score);
-        //    Debug.Log("Accuracy: " + instance.accuracy);
-        //    Debug.Log("TTK: " + instance.time_to_kill + "ms");
-        //}
-
         File.WriteAllText(SAVE_PATH, json);
     }
 

@@ -199,6 +199,8 @@ public class Menu_Stats_StatHeatmap : MonoBehaviour
         }
 
         killsPerSecond = (int)(((save_kills_per_sec - kps_min) * 100) / kps_max - kps_min);
+        Debug.Log("TTK_MIN = " + ttk_min);
+        Debug.Log("TTK_MAX = " + ttk_max);
         timeToKill = (int)(((save_time_to_kill - ttk_min) * 100) / ttk_max - ttk_min);
 
         DrawChart();
