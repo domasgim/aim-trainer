@@ -13,10 +13,16 @@ public class HeatMap_Stats : MonoBehaviour
     public Image Basic_KPS;
     public Image Basic_TTK;
 
+    public Image Moving_Score;
+    public Image Moving_Accuracy;
+    public Image Moving_TargetsHit;
+    public Image Moving_Time;
+    public Image Moving_KPS;
+    public Image Moving_TTK;
+
     private float[,] statArray = new float[3, 6];
 
     private int accuracy, score, targetsHit, time, killsPerSecond, timeToKill, gamesPlayed;
-    private float accuracy_HSV, score_HSV, targetsHit_HSV, time_HSV, killsPerSecond_HSV, timeToKill_HSV;
 
     private int save_score;
     private int save_time_to_kill;
@@ -48,6 +54,9 @@ public class HeatMap_Stats : MonoBehaviour
     {
         //SetImageValues();
         LoadSavedStats(levelEnum.BASIC);
+        PrintDebug();
+        LoadSavedStats(levelEnum.MOVING);
+        PrintDebug();
         SetImageValues();
         //PrintDebug();
     }
@@ -60,6 +69,7 @@ public class HeatMap_Stats : MonoBehaviour
         Debug.Log("Time - " + time);
         Debug.Log("KPS - " + killsPerSecond);
         Debug.Log("TTK - " + timeToKill);
+        Debug.Log("AAAAAAAAAAAAAAA");
     }
 
     private void SetImageValues()
@@ -71,42 +81,43 @@ public class HeatMap_Stats : MonoBehaviour
         Basic_KPS.color = Color.HSVToRGB(statArray[((int)levelEnum.BASIC), ((int)statTypeEnum.KPS)], 1f, 1f);
         Basic_TTK.color = Color.HSVToRGB(statArray[((int)levelEnum.BASIC), ((int)statTypeEnum.TTK)], 1f, 1f);
 
-        //if (gameStatus_Type == levelEnum.BASIC)
-        //{
-        //    Basic_Score.color = Color.HSVToRGB(score_HSV, 1f, 1f);
-        //    Basic_Accuracy.color = Color.HSVToRGB(accuracy_HSV, 1f, 1f);
-        //    Basic_TargetsHit.color = Color.HSVToRGB(targetsHit_HSV, 1f, 1f);
-        //    Basic_Time.color = Color.HSVToRGB(time_HSV, 1f, 1f);
-        //    Basic_KPS.color = Color.HSVToRGB(killsPerSecond_HSV, 1f, 1f);
-        //    Basic_TTK.color = Color.HSVToRGB(timeToKill_HSV, 1f, 1f);
-        //}
+        Moving_Score.color = Color.HSVToRGB(statArray[((int)levelEnum.MOVING), ((int)statTypeEnum.SCORE)], 1f, 1f);
+        Moving_Accuracy.color = Color.HSVToRGB(statArray[((int)levelEnum.MOVING), ((int)statTypeEnum.ACCURACY)], 1f, 1f);
+        Moving_TargetsHit.color = Color.HSVToRGB(statArray[((int)levelEnum.MOVING), ((int)statTypeEnum.TARGETS_HIT)], 1f, 1f);
+        Moving_Time.color = Color.HSVToRGB(statArray[((int)levelEnum.MOVING), ((int)statTypeEnum.TIME)], 1f, 1f);
+        Moving_KPS.color = Color.HSVToRGB(statArray[((int)levelEnum.MOVING), ((int)statTypeEnum.KPS)], 1f, 1f);
+        Moving_TTK.color = Color.HSVToRGB(statArray[((int)levelEnum.MOVING), ((int)statTypeEnum.TTK)], 1f, 1f);
     }
 
     // Get value representation used in HSVtoRGB()
     // 0f - red
     // 0.33f - green
-    private void CalculateRelativeHSVVals()
+    private void CalculateRelativeHSVVals(levelEnum levelType)
     {
         // Dividing by 360 because the maximum H value in HSV color is 360
         // 0 is red and 120 is green
         // All of these values (0-360) needs to be converted to a float betweeen [0f - 1f]
         // which will be used in HSVtoRGB()
-        score_HSV = (float)((score * 1.2) / 360);
-        accuracy_HSV = (float)((accuracy * 1.2) / 360);
-        targetsHit_HSV = (float)((targetsHit * 1.2) / 360);
-        time_HSV = (float)((time * 1.2) / 360);
-        killsPerSecond_HSV = (float)((killsPerSecond * 1.2) / 360);
-        timeToKill_HSV = (float)((timeToKill * 1.2) / 360);
+        statArray[((int)levelType), ((int)statTypeEnum.SCORE)] = 
+            (float)((statArray[((int)levelType), ((int)statTypeEnum.SCORE)] * 1.2) / 360);
 
-        statArray[((int)levelEnum.BASIC), ((int)statTypeEnum.SCORE)] = (float)((score * 1.2) / 360);
-        statArray[((int)levelEnum.BASIC), ((int)statTypeEnum.ACCURACY)] = (float)((accuracy * 1.2) / 360);
-        statArray[((int)levelEnum.BASIC), ((int)statTypeEnum.TARGETS_HIT)] = (float)((targetsHit * 1.2) / 360);
-        statArray[((int)levelEnum.BASIC), ((int)statTypeEnum.TIME)] = (float)((time * 1.2) / 360);
-        statArray[((int)levelEnum.BASIC), ((int)statTypeEnum.KPS)] = (float)((killsPerSecond * 1.2) / 360);
-        statArray[((int)levelEnum.BASIC), ((int)statTypeEnum.TTK)] = (float)((timeToKill * 1.2) / 360);
+        statArray[((int)levelType), ((int)statTypeEnum.ACCURACY)] = 
+            (float)((statArray[((int)levelType), ((int)statTypeEnum.ACCURACY)] * 1.2) / 360);
+
+        statArray[((int)levelType), ((int)statTypeEnum.TARGETS_HIT)] = 
+            (float)((statArray[((int)levelType), ((int)statTypeEnum.TARGETS_HIT)] * 1.2) / 360);
+
+        statArray[((int)levelType), ((int)statTypeEnum.TIME)] = 
+            (float)((statArray[((int)levelType), ((int)statTypeEnum.TIME)] * 1.2) / 360);
+
+        statArray[((int)levelType), ((int)statTypeEnum.KPS)] = 
+            (float)((statArray[((int)levelType), ((int)statTypeEnum.KPS)] * 1.2) / 360);
+
+        statArray[((int)levelType), ((int)statTypeEnum.TTK)] = 
+            (float)((statArray[((int)levelType), ((int)statTypeEnum.TTK)] * 1.2) / 360);
     }
 
-    private void CalculateNormalizedVals()
+    private void CalculateNormalizedVals(levelEnum levelType)
     {
         score = (int)((save_score * 100) / LevelStats.BASIC_SCORE_MAX);
         accuracy = (int)save_accuracy;
@@ -135,21 +146,32 @@ public class HeatMap_Stats : MonoBehaviour
         killsPerSecond = 100 - killsPerSecond;
         timeToKill = 100 - timeToKill;
 
-        statArray[((int)levelEnum.BASIC), ((int)statTypeEnum.SCORE)] = score;
-        statArray[((int)levelEnum.BASIC), ((int)statTypeEnum.ACCURACY)] = accuracy;
-        statArray[((int)levelEnum.BASIC), ((int)statTypeEnum.TARGETS_HIT)] = targetsHit;
-        statArray[((int)levelEnum.BASIC), ((int)statTypeEnum.TIME)] = time;
-        statArray[((int)levelEnum.BASIC), ((int)statTypeEnum.KPS)] = killsPerSecond;
-        statArray[((int)levelEnum.BASIC), ((int)statTypeEnum.TTK)] = timeToKill;
+        statArray[((int)levelType), ((int)statTypeEnum.SCORE)] = score;
+        statArray[((int)levelType), ((int)statTypeEnum.ACCURACY)] = accuracy;
+        statArray[((int)levelType), ((int)statTypeEnum.TARGETS_HIT)] = targetsHit;
+        statArray[((int)levelType), ((int)statTypeEnum.TIME)] = time;
+        statArray[((int)levelType), ((int)statTypeEnum.KPS)] = killsPerSecond;
+        statArray[((int)levelType), ((int)statTypeEnum.TTK)] = timeToKill;
     }
 
-    private void LoadSavedStats(levelEnum gameStatus_Type)
+    private void LoadSavedStats(levelEnum levelType)
     {
         gamesPlayed = 0;
         SessionData sessionData = SaveSystem.LoadSession();
         foreach (SessionData_instance instance in sessionData.session_list)
         {
-            if (gameStatus_Type == levelEnum.BASIC && instance.level_name == "Basic targets")
+            if (levelType == levelEnum.BASIC && instance.level_name == "Basic targets")
+            {
+                gamesPlayed++;
+                save_score += instance.score;
+                save_time_to_kill += instance.time_to_kill;
+                save_targets_missed += instance.targets_missed;
+                save_accuracy += instance.accuracy;
+                save_kills_per_sec += instance.kills_per_sec;
+                save_session_time += instance.session_time;
+            }
+
+            if (levelType == levelEnum.MOVING && instance.level_name == "Moving targets")
             {
                 gamesPlayed++;
                 save_score += instance.score;
@@ -160,6 +182,10 @@ public class HeatMap_Stats : MonoBehaviour
                 save_session_time += instance.session_time;
             }
         }
+        if (gamesPlayed == 0)
+        {
+            return;
+        }
 
         // Get average vals
         save_score /= gamesPlayed;
@@ -169,7 +195,7 @@ public class HeatMap_Stats : MonoBehaviour
         save_kills_per_sec /= gamesPlayed;
         save_session_time /= gamesPlayed;
 
-        CalculateNormalizedVals();
-        CalculateRelativeHSVVals();
+        CalculateNormalizedVals(levelType);
+        CalculateRelativeHSVVals(levelType);
     }
 }

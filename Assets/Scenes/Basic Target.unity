@@ -2498,7 +2498,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a5887bf7d2b90148abef419e30ba24b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetObj: {fileID: 2121836509}
+  targetObj: {fileID: 2121836511}
   resultsPanel: {fileID: 1048811209}
   finalResultsPanel: {fileID: 1469731230}
   finalScoreText: {fileID: 585094453}
@@ -2513,6 +2513,8 @@ MonoBehaviour:
   playerFollowCamera: {fileID: 364982979}
   score: 0
   targetsHit: 0
+  time_to_kill: 0
+  kills_per_second: 0
   accuracy: 0
   currentTime: 0
   singleTargetLifeTime: 3
@@ -3861,10 +3863,11 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &2121836509 stripped
+--- !u!114 &2121836511
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4770448373821897830, guid: 4f131f0c9a5e87f43acc55d0f8cdf2f1, type: 3}
-  m_PrefabInstance: {fileID: 378255576}
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2121836506}
   m_Enabled: 1
@@ -3872,6 +3875,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d781c14f34c1b440b1f768e15c855db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  material: {fileID: 2100000, guid: eb50e96089f51c44aa1e16c4f8c7c7c1, type: 2}
+  gameControl: {fileID: 1181110637}
 --- !u!1 &2145082843
 GameObject:
   m_ObjectHideFlags: 0

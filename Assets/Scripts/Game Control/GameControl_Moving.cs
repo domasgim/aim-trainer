@@ -7,6 +7,8 @@ using TMPro;
 
 public class GameControl_Moving : MonoBehaviour
 {
+    public Target_Moving targetObj;
+
     [SerializeField]
     private GameObject resultsPanel;
 
@@ -26,16 +28,23 @@ public class GameControl_Moving : MonoBehaviour
     Camera cam;
 
     [SerializeField]
-    private int targetsAmmountInitial;
+    public int targetsAmmountInitial;
 
     [SerializeField]
     public GameObject playerFollowCamera;
 
-    public static int score, targetsHit;
+    public int score, targetsHit, time_to_kill;
 
-    private float shotsFired;
-    private float accuracy;
-    private float currentTime;
+    /// <summary>
+    /// Total targets including missed ones
+    /// </summary>
+    public int targetNumber;
+
+    public float shotsFired;
+    public float accuracy;
+    public float currentTime;
+    private float targetTime;
+    public float singleTargetLifeTime;
 
     public enum gameStatusEnum
     {
@@ -63,6 +72,8 @@ public class GameControl_Moving : MonoBehaviour
     void Start()
     {
         currentTime = 0;
+        targetTime = 0;
+        time_to_kill = 0;
 
         score = 0;
         shotsFired = 0;
@@ -83,6 +94,11 @@ public class GameControl_Moving : MonoBehaviour
     {
         if (pauseStatus != pauseStatusEnum.PAUSED)
         {
+            if (targetNumber >= targetsAmmountInitial)
+            {
+                pauseStatus = pauseStatusEnum.PAUSED;
+                gameStatus = gameStatusEnum.FINISHED;
+            }
             PrintTime();
 
             // Mouse 1 pressed
@@ -101,6 +117,7 @@ public class GameControl_Moving : MonoBehaviour
                             gameStatus = gameStatusEnum.STARTED;
                             target.EnableTarget();
                             target.Hit(hit.point);
+                            targetTime = 0f;
 
                             // This is nessecary because it doesn't make sense
                             // to count a shot if it is fired to start the game
@@ -110,13 +127,18 @@ public class GameControl_Moving : MonoBehaviour
                         {
                             //score += 10;
                             targetsHit++;
+                            targetNumber++;
+
+                            Debug.Log("Targets hit = " + targetsHit + "; targetNumber = " + targetNumber);
 
                             // If all the targets are hit
-                            if (targetsHit == targetsAmmountInitial)
+                            if (targetNumber >= targetsAmmountInitial || targetsHit >= targetsAmmountInitial)
                             {
                                 pauseStatus = pauseStatusEnum.PAUSED;
                                 gameStatus = gameStatusEnum.FINISHED;
                                 score += target.Hit(hit.point);
+                                time_to_kill = (int)(targetTime * 1000);
+                                targetTime = 0f;
 
                                 // We add a last shot because the shot counting
                                 // logic will not work after this line
@@ -125,6 +147,8 @@ public class GameControl_Moving : MonoBehaviour
                             else
                             {
                                 score += target.Hit(hit.point);
+                                time_to_kill = (int)(targetTime * 1000);
+                                targetTime = 0f;
                             }
                         }
                     }
@@ -135,6 +159,12 @@ public class GameControl_Moving : MonoBehaviour
                 }
 
                 PrintResults();
+            }
+            if (targetTime > singleTargetLifeTime)
+            {
+                targetNumber++;
+                targetTime = 0f;
+                targetObj.Hit(new Vector3(0, 0, 0));
             }
             if (gameStatus != gameStatusEnum.FINISHED)
             {
@@ -164,6 +194,11 @@ public class GameControl_Moving : MonoBehaviour
             accuracy = targetsHit / shotsFired * 100f;
         }
         //accuracyText.text = "Accuracy: " + accuracy.ToString("N2") + " %";
+        finalScoreText.text = "Score: " + score;
+        finalTargetsHitText.text = "Targets Hit: " + targetsHit + "/" + targetsAmmountInitial;
+        finalShotsFiredText.text = "Shots Fired: " + shotsFired;
+        finalAccuracyText.text = "Accuracy: " + accuracy.ToString("N2") + " %";
+        finalCurrentTimeText.text = "Time: -";
     }
 
     private void PrintTime()
@@ -171,6 +206,7 @@ public class GameControl_Moving : MonoBehaviour
         if (gameStatus == gameStatusEnum.STARTED)
         {
             currentTime = currentTime + Time.deltaTime;
+            targetTime = targetTime + Time.deltaTime;
         }
         TimeSpan time = TimeSpan.FromSeconds(currentTime);
         currentTimeText.text = "Time: " + time.ToString("mm':'ss':'fff");
