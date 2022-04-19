@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -71,6 +72,29 @@ public class PauseMenu_Anticipation : MonoBehaviour
     {
         SceneManager.LoadScene(0);
         Debug.Log("Loading menu...");
+    }
+
+    public void LoadMenuSave()
+    {
+        SessionData_instance sessionData_instance = new SessionData_instance();
+        sessionData_instance.level_name = "Basic targets";
+        sessionData_instance.score = gameControl.score;
+        sessionData_instance.accuracy = gameControl.accuracy;
+        if (gameControl.targetsHit != 0)
+        {
+            sessionData_instance.time_to_kill = gameControl.time_to_kill / gameControl.targetsHit;
+        }
+        else
+        {
+            sessionData_instance.time_to_kill = 100;
+        }
+        sessionData_instance.kills_per_sec = gameControl.targetsHit / gameControl.currentTime;
+        sessionData_instance.targets_missed = gameControl.targetsAmmountInitial - gameControl.targetsHit;
+        sessionData_instance.session_time = gameControl.currentTime;
+        sessionData_instance.unix_timestamp = (int)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
+
+        SaveSystem.SaveSession(sessionData_instance);
+        SceneManager.LoadScene(0);
     }
 
     public void QuitGame()

@@ -33,26 +33,26 @@ public class GameControl_Anticipation : MonoBehaviour
     Camera cam;
 
     [SerializeField]
-    private int targetsAmmountInitial;
+    public int targetsAmmountInitial;
 
     public PathFollower followerPrefab;
     public Transform spawnPoint;
     public PathCreator[] pathPrefabs;
 
-    public static int score;
+    public int score, time_to_kill;
 
     /// <summary>
     /// Number of targets hit by the player
     /// </summary>
-    public static int targetsHit;
+    public int targetsHit;
 
     /// <summary>
     /// Total targets including missed ones
     /// </summary>
-    public static int targetNumber;
+    public int targetNumber;
 
-    private float shotsFired;
-    private float accuracy;
+    public float shotsFired;
+    public float accuracy;
     public float currentTime;
     public float singleTargetLifeTime;
 
@@ -89,6 +89,7 @@ public class GameControl_Anticipation : MonoBehaviour
     void Start()
     {
         currentTime = 0;
+        time_to_kill = 0;
 
         score = 0;
         shotsFired = 0;
@@ -135,8 +136,6 @@ public class GameControl_Anticipation : MonoBehaviour
                             int hitReturn = 0;
                             if ((hitReturn = target.Hit(hit.point)) != 0)
                             {
-                                // TODO: save time here
-                                // restart timer
                                 currentTime = 0f;
                                 if (targetsHit < targetsAmmountInitial)
                                 {
