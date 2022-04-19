@@ -20,6 +20,13 @@ public class HeatMap_Stats : MonoBehaviour
     public Image Moving_KPS;
     public Image Moving_TTK;
 
+    public Image Anticipation_Score;
+    public Image Anticipation_Accuracy;
+    public Image Anticipation_TargetsHit;
+    public Image Anticipation_Time;
+    public Image Anticipation_KPS;
+    public Image Anticipation_TTK;
+
     private float[,] statArray = new float[3, 6];
 
     private int accuracy, score, targetsHit, time, killsPerSecond, timeToKill, gamesPlayed;
@@ -54,9 +61,11 @@ public class HeatMap_Stats : MonoBehaviour
     {
         //SetImageValues();
         LoadSavedStats(levelEnum.BASIC);
-        PrintDebug();
+        //PrintDebug();
         LoadSavedStats(levelEnum.MOVING);
-        PrintDebug();
+        //PrintDebug();
+        LoadSavedStats(levelEnum.ANTICIPATION);
+        //PrintDebug();
         SetImageValues();
         //PrintDebug();
     }
@@ -87,6 +96,13 @@ public class HeatMap_Stats : MonoBehaviour
         Moving_Time.color = Color.HSVToRGB(statArray[((int)levelEnum.MOVING), ((int)statTypeEnum.TIME)], 1f, 1f);
         Moving_KPS.color = Color.HSVToRGB(statArray[((int)levelEnum.MOVING), ((int)statTypeEnum.KPS)], 1f, 1f);
         Moving_TTK.color = Color.HSVToRGB(statArray[((int)levelEnum.MOVING), ((int)statTypeEnum.TTK)], 1f, 1f);
+
+        Anticipation_Score.color = Color.HSVToRGB(statArray[((int)levelEnum.ANTICIPATION), ((int)statTypeEnum.SCORE)], 1f, 1f);
+        Anticipation_Accuracy.color = Color.HSVToRGB(statArray[((int)levelEnum.ANTICIPATION), ((int)statTypeEnum.ACCURACY)], 1f, 1f);
+        Anticipation_TargetsHit.color = Color.HSVToRGB(statArray[((int)levelEnum.ANTICIPATION), ((int)statTypeEnum.TARGETS_HIT)], 1f, 1f);
+        Anticipation_Time.color = Color.HSVToRGB(statArray[((int)levelEnum.ANTICIPATION), ((int)statTypeEnum.TIME)], 1f, 1f);
+        Anticipation_KPS.color = Color.HSVToRGB(statArray[((int)levelEnum.ANTICIPATION), ((int)statTypeEnum.KPS)], 1f, 1f);
+        Anticipation_TTK.color = Color.HSVToRGB(statArray[((int)levelEnum.ANTICIPATION), ((int)statTypeEnum.TTK)], 1f, 1f);
     }
 
     // Get value representation used in HSVtoRGB()
@@ -121,6 +137,10 @@ public class HeatMap_Stats : MonoBehaviour
     {
         score = (int)((save_score * 100) / LevelStats.BASIC_SCORE_MAX);
         accuracy = (int)save_accuracy;
+        if (levelType == levelEnum.ANTICIPATION)
+        {
+            Debug.Log("Accuracy = " + accuracy);
+        }
         targetsHit = (int)(((LevelStats.BASIC_TARGETS_MAX - save_targets_missed) * 100) / LevelStats.BASIC_TARGETS_MAX);
         time = (int)(((save_session_time - LevelStats.BASIC_TIME_MIN) * 100) / LevelStats.BASIC_TIME_MAX - LevelStats.BASIC_TIME_MIN);
         // must invert value
@@ -154,8 +174,20 @@ public class HeatMap_Stats : MonoBehaviour
         statArray[((int)levelType), ((int)statTypeEnum.TTK)] = timeToKill;
     }
 
+    public void ResetSaveVals()
+    {
+        gamesPlayed = 0;
+        save_score = 0;
+        save_time_to_kill = 0;
+        save_targets_missed = 0;
+        save_accuracy = 0;
+        save_kills_per_sec = 0;
+        save_session_time = 0;
+    }
+
     private void LoadSavedStats(levelEnum levelType)
     {
+        ResetSaveVals();
         gamesPlayed = 0;
         SessionData sessionData = SaveSystem.LoadSession();
         foreach (SessionData_instance instance in sessionData.session_list)
@@ -181,17 +213,33 @@ public class HeatMap_Stats : MonoBehaviour
                 save_kills_per_sec += instance.kills_per_sec;
                 save_session_time += instance.session_time;
             }
+
+            if (levelType == levelEnum.ANTICIPATION && instance.level_name == "Anticipation targets")
+            {
+                gamesPlayed++;
+                save_score += instance.score;
+                save_time_to_kill += instance.time_to_kill;
+                save_targets_missed += instance.targets_missed;
+                save_accuracy += instance.accuracy;
+                save_kills_per_sec += instance.kills_per_sec;
+                save_session_time += instance.session_time;
+            }
         }
-        if (gamesPlayed == 0)
-        {
-            return;
-        }
+
 
         // Get average vals
         save_score /= gamesPlayed;
         save_time_to_kill /= gamesPlayed;
         save_targets_missed /= gamesPlayed;
+        if (levelType == levelEnum.ANTICIPATION)
+        {
+            Debug.Log("Save_accuracy = " + save_accuracy + " / " + gamesPlayed);
+        }
         save_accuracy /= gamesPlayed;
+        if (levelType == levelEnum.ANTICIPATION)
+        {
+            Debug.Log("Answ = " + save_accuracy);
+        }
         save_kills_per_sec /= gamesPlayed;
         save_session_time /= gamesPlayed;
 

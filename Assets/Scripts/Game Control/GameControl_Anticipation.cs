@@ -54,6 +54,8 @@ public class GameControl_Anticipation : MonoBehaviour
     public float shotsFired;
     public float accuracy;
     public float currentTime;
+    public float activeTargetTime;
+    public float sessionTime;
     public float singleTargetLifeTime;
 
     public enum gameStatusEnum
@@ -90,6 +92,7 @@ public class GameControl_Anticipation : MonoBehaviour
     {
         currentTime = 0;
         time_to_kill = 0;
+        activeTargetTime = 0;
 
         score = 0;
         shotsFired = 0;
@@ -136,9 +139,10 @@ public class GameControl_Anticipation : MonoBehaviour
                             int hitReturn = 0;
                             if ((hitReturn = target.Hit(hit.point)) != 0)
                             {
-                                currentTime = 0f;
+                                activeTargetTime += currentTime;
                                 if (targetsHit < targetsAmmountInitial)
                                 {
+                                    time_to_kill = (int)(currentTime * 1000);
                                     score += hitReturn;
                                     targetsHit++;
                                     targetNumber++;
@@ -155,6 +159,7 @@ public class GameControl_Anticipation : MonoBehaviour
                                         SpawnRandomPath();
                                     }
                                 }
+                                currentTime = 0f;
                             }
                         }
                     }
@@ -173,6 +178,7 @@ public class GameControl_Anticipation : MonoBehaviour
             if (currentTime > singleTargetLifeTime)
             {
                 targetNumber++;
+                activeTargetTime += currentTime;
                 currentTime = 0f;
                 targetStatus = GameControl_Anticipation.targetStatusEnum.TARGETS_DISABLED;
                 SpawnRandomPath();
@@ -215,11 +221,17 @@ public class GameControl_Anticipation : MonoBehaviour
 
     private void PrintTime()
     {
+        if (gameStatus == gameStatusEnum.STARTED && pauseStatus == pauseStatusEnum.RESUMED)
+        {
+            sessionTime = sessionTime + Time.deltaTime;
+        }
         if (targetStatus == targetStatusEnum.TARGETS_ENABLED)
         {
             currentTime = currentTime + Time.deltaTime;
         }
+
         TimeSpan time = TimeSpan.FromSeconds(currentTime);
+        //TimeSpan time = TimeSpan.FromSeconds(sessionTime);
         currentTimeText.text = "Time: " + time.ToString("mm':'ss':'fff");
     }
 

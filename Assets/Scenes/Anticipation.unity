@@ -2158,9 +2158,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 152296582}
-        m_TargetAssemblyTypeName: PauseMenu, Assembly-CSharp
-        m_MethodName: 
+      - m_Target: {fileID: 152296588}
+        m_TargetAssemblyTypeName: PauseMenu_Anticipation, Assembly-CSharp
+        m_MethodName: LoadMenuSave
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2420,6 +2420,8 @@ MonoBehaviour:
   shotsFired: 0
   accuracy: 0
   currentTime: 0
+  activeTargetTime: 0
+  sessionTime: 0
   singleTargetLifeTime: 3
   gameStatus: 0
   targetStatus: 0

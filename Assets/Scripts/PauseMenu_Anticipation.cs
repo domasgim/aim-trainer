@@ -77,7 +77,7 @@ public class PauseMenu_Anticipation : MonoBehaviour
     public void LoadMenuSave()
     {
         SessionData_instance sessionData_instance = new SessionData_instance();
-        sessionData_instance.level_name = "Basic targets";
+        sessionData_instance.level_name = "Anticipation targets";
         sessionData_instance.score = gameControl.score;
         sessionData_instance.accuracy = gameControl.accuracy;
         if (gameControl.targetsHit != 0)
@@ -88,9 +88,9 @@ public class PauseMenu_Anticipation : MonoBehaviour
         {
             sessionData_instance.time_to_kill = 100;
         }
-        sessionData_instance.kills_per_sec = gameControl.targetsHit / gameControl.currentTime;
+        sessionData_instance.kills_per_sec = gameControl.targetsHit / gameControl.activeTargetTime;
         sessionData_instance.targets_missed = gameControl.targetsAmmountInitial - gameControl.targetsHit;
-        sessionData_instance.session_time = gameControl.currentTime;
+        sessionData_instance.session_time = gameControl.sessionTime;
         sessionData_instance.unix_timestamp = (int)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
 
         SaveSystem.SaveSession(sessionData_instance);
