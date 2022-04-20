@@ -10,51 +10,45 @@ public class AchievementInstance
     private bool unlocked;
     private int spriteIndex;
     private GameObject achievementReference;
-    public AchievementInstance(string name, string description, int spriteIndex, GameObject achievementReference)
+
+    public string Name
     {
-        this.Name = name;
-        this.Description = description;
-        this.Unlocked = false;
-        this.SpriteIndex = spriteIndex;
-        this.AchievementReference = achievementReference;
+        get { return name; }
+        set { name = value; }
     }
-
-    public string Name 
-    { 
-        get => name; 
-        set => name = value; 
-    }
-
-    public string Description 
-    { 
-        get => description;
-        set => description = value;
+    public string Description
+    {
+        get { return description; }
+        set { name = value; }
     }
 
     public bool Unlocked
-    { 
-        get => unlocked; 
-        set => unlocked = value;
-    }
-
-    public int SpriteIndex 
-    { 
-        get => spriteIndex; 
-        set => spriteIndex = value;
-    }
-
-    public GameObject AchievementReference 
     {
-        get => achievementReference; 
-        set => achievementReference = value; 
+        get { return unlocked; }
+        set { unlocked = value; }
+    }
+
+    public int SpriteIndex
+    {
+        get { return spriteIndex; }
+        set { spriteIndex = value; }
+    }
+
+    public AchievementInstance(string name, string description, int spriteIndex, GameObject achievementReference)
+    {
+        this.name = name;
+        this.description = description;
+        this.unlocked = false;
+        this.spriteIndex = spriteIndex;
+        this.achievementReference = achievementReference;
     }
 
     public bool EarnAchievement()
     {
-        if (!Unlocked)
+        if (!unlocked)
         {
-            achievementReference.GetComponent<Image>().sprite = Achievements.SingletonAchievementsInstance.unlockedSprite;
-            Unlocked = true;
+            achievementReference.GetComponent<Image>().sprite = AchievementManager.Instance.unlockedSprite;
+            unlocked = true;
             return true;
         }
         return false;
