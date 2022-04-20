@@ -59,7 +59,7 @@ public class AchievementManager : MonoBehaviour
     public void CreateAchievement(string parent, string title, string description, int spriteIndex)
     {
         GameObject achievementGameObject = (GameObject)Instantiate(achievementPrefab);
-        AchievementInstance newAchievementInstance = new AchievementInstance(name, description, spriteIndex, achievementGameObject);
+        AchievementInstance newAchievementInstance = new AchievementInstance(title, description, spriteIndex, achievementGameObject);
         achievementDictionary.Add(title, newAchievementInstance);
         SetAchievementInfo(parent, achievementGameObject, title);
     }
