@@ -10,8 +10,6 @@ public class AchievementInstance
     private bool unlocked;
     private int spriteIndex;
     private GameObject achievementReference;
-    private List<AchievementInstance> achievementDependencies = new List<AchievementInstance>();
-    private string currentAchievementChild;
 
     public string Name
     {
@@ -57,17 +55,6 @@ public class AchievementInstance
             spriteIndex = value;
         }
     }
-    public string CurrentAchievementChild
-    {
-        get 
-        { 
-            return currentAchievementChild; 
-        }
-        set 
-        { 
-            currentAchievementChild = value; 
-        }
-    }
 
     public AchievementInstance(string name, string description, int spriteIndex, GameObject achievementReference)
     {
@@ -79,35 +66,13 @@ public class AchievementInstance
         LoadAchievement();
     }
 
-    public void AddDependency(AchievementInstance dependency)
-    {
-        achievementDependencies.Add(dependency);
-    }
-
     public bool EarnAchievement()
     {
         if (!unlocked)
         {
-            bool dependenciesMatched = true;
-            foreach (AchievementInstance instance in achievementDependencies)
-            {
-                if (instance.unlocked == false)
-                {
-                    dependenciesMatched = false;
-                }
-            }
-            if (dependenciesMatched)
-            {
-                achievementReference.GetComponent<Image>().sprite = AchievementManager.Instance.unlockedSprite;
-                SaveAchievement(true);
-
-                if (currentAchievementChild != null)
-                {
-                    AchievementManager.Instance.EarnAchievement(currentAchievementChild);
-                }
-
-                return true;
-            }
+            achievementReference.GetComponent<Image>().sprite = AchievementManager.Instance.unlockedSprite;
+            SaveAchievement(true);
+            return true;
         }
         return false;
     }

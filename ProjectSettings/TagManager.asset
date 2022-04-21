@@ -6,6 +6,7 @@ TagManager:
   tags:
   - CinemachineTarget
   - Target_Clone
+  - AchievementList
   layers:
   - Default
   - TransparentFX

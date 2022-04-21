@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using AimTrainer.Utils;
+using TMPro;
 
 public class WindowGraph : MonoBehaviour
 {
+    [SerializeField] private TextMeshProUGUI heading;
     [SerializeField] private Sprite circleSprite;
     [SerializeField] private RectTransform graphContainer;
     [SerializeField] private RectTransform labelTemplateX;
@@ -91,6 +93,7 @@ public class WindowGraph : MonoBehaviour
 
     public void ShowScoreGraph()
     {
+        heading.text = "Score";
         listContainsFloatVals = false;
         LoadSavedStats();
         valueList_cached = scoreList;
@@ -99,6 +102,7 @@ public class WindowGraph : MonoBehaviour
 
     public void ShowAccuracyGraph()
     {
+        heading.text = "Accuracy";
         listContainsFloatVals = false;
         LoadSavedStats();
         valueList_cached = accuracyList;
@@ -107,6 +111,7 @@ public class WindowGraph : MonoBehaviour
 
     public void ShowTargetsHitGraph()
     {
+        heading.text = "Targets hit";
         listContainsFloatVals = false;
         LoadSavedStats();
         valueList_cached = targetsHitList;
@@ -115,6 +120,7 @@ public class WindowGraph : MonoBehaviour
 
     public void ShowTimeGraph()
     {
+        heading.text = "Time";
         listContainsFloatVals = false;
         LoadSavedStats();
         valueList_cached = timeList;
@@ -123,6 +129,7 @@ public class WindowGraph : MonoBehaviour
 
     public void ShowKillsPerSecGraph()
     {
+        heading.text = "Kills per second";
         listContainsFloatVals = true;
         LoadSavedStats();
         valueList_cached = killsPerSecList;
@@ -131,6 +138,7 @@ public class WindowGraph : MonoBehaviour
 
     public void ShowTimeToKillGraph()
     {
+        heading.text = "Time to kill";
         listContainsFloatVals = false;
         LoadSavedStats();
         valueList_cached = timeToKillList;
@@ -141,9 +149,9 @@ public class WindowGraph : MonoBehaviour
     {
         //Grid grid = new Grid(4, 3, 50f);
         gameObjectList = new List<GameObject>();
-        valueList_cached = valueList1;
-        List<int> valueList = new List<int>() { 5, 3, 56, 27, 80, 46, 51, 10, 100, 100 };
-        ShowGraph(valueList_cached);
+        //valueList_cached = valueList1;
+        //ShowGraph(valueList_cached);
+        ShowScoreGraph();
     }
     private GameObject CreateCircle(Vector2 anchoredPosition)
     {
