@@ -135,14 +135,37 @@ public class HeatMap_Stats : MonoBehaviour
 
     private void CalculateNormalizedVals(levelEnum levelType)
     {
-        score = (int)((save_score * 100) / LevelStats.BASIC_SCORE_MAX);
         accuracy = (int)save_accuracy;
-        if (levelType == levelEnum.ANTICIPATION)
+
+        if (levelType == levelEnum.BASIC)
         {
-            Debug.Log("Accuracy = " + accuracy);
+            score = (int)((save_score * 100) / LevelStats.BASIC_SCORE_MAX);
+            targetsHit = (int)(((LevelStats.BASIC_TARGETS_MAX - save_targets_missed) * 100) / LevelStats.BASIC_TARGETS_MAX);
+            time = (int)(((save_session_time - LevelStats.BASIC_TIME_MIN) * 100) / LevelStats.BASIC_TIME_MAX - LevelStats.BASIC_TIME_MIN);
+            killsPerSecond = (int)(((save_kills_per_sec - LevelStats.BASIC_KPS_MIN) * 100) / LevelStats.BASIC_KPS_MAX - LevelStats.BASIC_KPS_MIN);
+            timeToKill = (save_time_to_kill - LevelStats.BASIC_TTK_MIN) * 100 / (LevelStats.BASIC_TTK_MAX - LevelStats.BASIC_TTK_MIN);
         }
-        targetsHit = (int)(((LevelStats.BASIC_TARGETS_MAX - save_targets_missed) * 100) / LevelStats.BASIC_TARGETS_MAX);
-        time = (int)(((save_session_time - LevelStats.BASIC_TIME_MIN) * 100) / LevelStats.BASIC_TIME_MAX - LevelStats.BASIC_TIME_MIN);
+        else if (levelType == levelEnum.MOVING)
+        {
+            score = (int)((save_score * 100) / LevelStats.MOVING_SCORE_MAX);
+            targetsHit = (int)(((LevelStats.MOVING_TARGETS_MAX - save_targets_missed) * 100) / LevelStats.MOVING_TARGETS_MAX);
+            time = (int)(((save_session_time - LevelStats.MOVING_TIME_MIN) * 100) / LevelStats.MOVING_TIME_MAX - LevelStats.MOVING_TIME_MIN);
+            killsPerSecond = (int)(((save_kills_per_sec - LevelStats.MOVING_KPS_MIN) * 100) / LevelStats.MOVING_KPS_MAX - LevelStats.MOVING_KPS_MIN);
+            timeToKill = (save_time_to_kill - LevelStats.MOVING_TTK_MIN) * 100 / (LevelStats.MOVING_TTK_MAX - LevelStats.MOVING_TTK_MIN);
+        }
+        else
+        {
+            score = (int)((save_score * 100) / LevelStats.ANTICIPATION_SCORE_MAX);
+            targetsHit = (int)(((LevelStats.ANTICIPATION_TARGETS_MAX - save_targets_missed) * 100) / LevelStats.ANTICIPATION_TARGETS_MAX);
+            time = (int)(((save_session_time - LevelStats.ANTICIPATION_TIME_MIN) * 100) / LevelStats.ANTICIPATION_TIME_MAX - LevelStats.ANTICIPATION_TIME_MIN);
+            killsPerSecond = (int)(((save_kills_per_sec - LevelStats.ANTICIPATION_KPS_MIN) * 100) / LevelStats.ANTICIPATION_KPS_MAX - LevelStats.ANTICIPATION_KPS_MIN);
+            timeToKill = (save_time_to_kill - LevelStats.ANTICIPATION_TTK_MIN) * 100 / (LevelStats.ANTICIPATION_TTK_MAX - LevelStats.ANTICIPATION_TTK_MIN);
+        }
+        //score = (int)((save_score * 100) / LevelStats.BASIC_SCORE_MAX);
+        //targetsHit = (int)(((LevelStats.BASIC_TARGETS_MAX - save_targets_missed) * 100) / LevelStats.BASIC_TARGETS_MAX);
+        //time = (int)(((save_session_time - LevelStats.BASIC_TIME_MIN) * 100) / LevelStats.BASIC_TIME_MAX - LevelStats.BASIC_TIME_MIN);
+        //killsPerSecond = (int)(((save_kills_per_sec - LevelStats.BASIC_KPS_MIN) * 100) / LevelStats.BASIC_KPS_MAX - LevelStats.BASIC_KPS_MIN);
+        //timeToKill = (save_time_to_kill - LevelStats.BASIC_TTK_MIN) * 100 / (LevelStats.BASIC_TTK_MAX - LevelStats.BASIC_TTK_MIN);
         // must invert value
         time = 100 - time;
         if (time > 100)
@@ -153,9 +176,6 @@ public class HeatMap_Stats : MonoBehaviour
         {
             time = 0;
         }
-
-        killsPerSecond = (int)(((save_kills_per_sec - LevelStats.BASIC_KPS_MIN) * 100) / LevelStats.BASIC_KPS_MAX - LevelStats.BASIC_KPS_MIN);
-        timeToKill = (save_time_to_kill - LevelStats.BASIC_TTK_MIN) * 100 / (LevelStats.BASIC_TTK_MAX - LevelStats.BASIC_TTK_MIN);
 
         // We invert these values in refrence to 100 because we want to represent
         // minimum values in green and maximum values in red in HSV format
@@ -226,22 +246,16 @@ public class HeatMap_Stats : MonoBehaviour
             }
         }
 
-
-        // Get average vals
-        save_score /= gamesPlayed;
-        save_time_to_kill /= gamesPlayed;
-        save_targets_missed /= gamesPlayed;
-        if (levelType == levelEnum.ANTICIPATION)
+        if (gamesPlayed > 0)
         {
-            Debug.Log("Save_accuracy = " + save_accuracy + " / " + gamesPlayed);
+            // Get average vals
+            save_score /= gamesPlayed;
+            save_time_to_kill /= gamesPlayed;
+            save_targets_missed /= gamesPlayed;
+            save_accuracy /= gamesPlayed;
+            save_kills_per_sec /= gamesPlayed;
+            save_session_time /= gamesPlayed;
         }
-        save_accuracy /= gamesPlayed;
-        if (levelType == levelEnum.ANTICIPATION)
-        {
-            Debug.Log("Answ = " + save_accuracy);
-        }
-        save_kills_per_sec /= gamesPlayed;
-        save_session_time /= gamesPlayed;
 
         CalculateNormalizedVals(levelType);
         CalculateRelativeHSVVals(levelType);

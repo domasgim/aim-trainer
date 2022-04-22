@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using TMPro;
+using AimTrainer.Utils;
 
 public class Menu_Stats_StatHeatmap : MonoBehaviour
 {
@@ -36,16 +37,36 @@ public class Menu_Stats_StatHeatmap : MonoBehaviour
     {
         if (gameStatus_Type == levelEnum.BASIC)
         {
-            score_max = 300;
-            // Slowest time
-            time_max = 10;
-            // Fastest time
-            time_min = 1;
-            kps_max = 3;
-            kps_min = 0.1f;
-            ttk_max = 50;
-            ttk_max = 3000;
-            targets_max = 3;
+            score_max = LevelStats.BASIC_SCORE_MAX;
+            time_max = LevelStats.BASIC_TIME_MAX;
+            time_min = LevelStats.BASIC_TIME_MIN;
+            kps_max = LevelStats.BASIC_KPS_MAX;
+            kps_min = LevelStats.BASIC_KPS_MIN;
+            ttk_min = LevelStats.BASIC_TTK_MIN;
+            ttk_max = LevelStats.BASIC_TTK_MAX;
+            targets_max = LevelStats.BASIC_TARGETS_MAX;
+        } 
+        else if (gameStatus_Type == levelEnum.MOVING)
+        {
+            score_max = LevelStats.MOVING_SCORE_MAX;
+            time_max = LevelStats.MOVING_TIME_MAX;
+            time_min = LevelStats.MOVING_TIME_MIN;
+            kps_max = LevelStats.MOVING_KPS_MAX;
+            kps_min = LevelStats.MOVING_KPS_MIN;
+            ttk_min = LevelStats.MOVING_TTK_MIN;
+            ttk_max = LevelStats.MOVING_TTK_MAX;
+            targets_max = LevelStats.MOVING_TARGETS_MAX;
+        }
+        else if (gameStatus_Type == levelEnum.ANTICIPATION)
+        {
+            score_max = LevelStats.ANTICIPATION_SCORE_MAX;
+            time_max = LevelStats.ANTICIPATION_TIME_MAX;
+            time_min = LevelStats.ANTICIPATION_TIME_MIN;
+            kps_max = LevelStats.ANTICIPATION_KPS_MAX;
+            kps_min = LevelStats.ANTICIPATION_KPS_MIN;
+            ttk_min = LevelStats.ANTICIPATION_TTK_MIN;
+            ttk_max = LevelStats.ANTICIPATION_TTK_MAX;
+            targets_max = LevelStats.ANTICIPATION_TARGETS_MAX;
         }
     }
     private void ResetStats()
@@ -66,7 +87,7 @@ public class Menu_Stats_StatHeatmap : MonoBehaviour
         save_kills_per_sec = 0;
         save_session_time = 0;
     }
-    private void LoadSavedStats()
+    private int LoadSavedStats()
     {
         SessionData sessionData = SaveSystem.LoadSession();
         foreach (SessionData_instance instance in sessionData.session_list)
@@ -81,16 +102,41 @@ public class Menu_Stats_StatHeatmap : MonoBehaviour
                 save_kills_per_sec += instance.kills_per_sec;
                 save_session_time += instance.session_time;
             }
+            else if (gameStatus_Type == levelEnum.MOVING && instance.level_name == "Moving targets")
+            {
+                gamesPlayed++;
+                save_score += instance.score;
+                save_time_to_kill += instance.time_to_kill;
+                save_targets_missed += instance.targets_missed;
+                save_accuracy += instance.accuracy;
+                save_kills_per_sec += instance.kills_per_sec;
+                save_session_time += instance.session_time;
+            }
+            else if (gameStatus_Type == levelEnum.ANTICIPATION && instance.level_name == "Anticipation targets")
+            {
+                gamesPlayed++;
+                save_score += instance.score;
+                save_time_to_kill += instance.time_to_kill;
+                save_targets_missed += instance.targets_missed;
+                save_accuracy += instance.accuracy;
+                save_kills_per_sec += instance.kills_per_sec;
+                save_session_time += instance.session_time;
+            }
         }
 
-        // Get average vals
-        save_score /= gamesPlayed;
-        save_time_to_kill /= gamesPlayed;
-        save_targets_missed /= gamesPlayed;
-        save_accuracy /= gamesPlayed;
-        save_kills_per_sec /= gamesPlayed;
-        save_session_time /= gamesPlayed;
+        if (gamesPlayed > 0)
+        {
+            save_score /= gamesPlayed;
+            save_time_to_kill /= gamesPlayed;
+            save_targets_missed /= gamesPlayed;
+            save_accuracy /= gamesPlayed;
+            save_kills_per_sec /= gamesPlayed;
+            save_session_time /= gamesPlayed;
+            return 0;
+        }
+        return 1;
     }
+
     public void PrintText()
     {
         scoreText.text = "Score: " + score + "%"; 
@@ -180,7 +226,10 @@ public class Menu_Stats_StatHeatmap : MonoBehaviour
     {
         ResetStats();
         SetLevelTypeStats();
-        LoadSavedStats();
+        if (LoadSavedStats() == 1)
+        {
+            return;
+        }
 
         // Calculate from range min / max
         score = (int)((save_score * 100) / score_max);
@@ -199,9 +248,7 @@ public class Menu_Stats_StatHeatmap : MonoBehaviour
         }
 
         killsPerSecond = (int)(((save_kills_per_sec - kps_min) * 100) / kps_max - kps_min);
-        Debug.Log("TTK_MIN = " + ttk_min);
-        Debug.Log("TTK_MAX = " + ttk_max);
-        timeToKill = (int)(((save_time_to_kill - ttk_min) * 100) / ttk_max - ttk_min);
+        timeToKill = (int)((save_time_to_kill - ttk_min) * 100 / (ttk_max - ttk_min));
 
         DrawChart();
         PrintText();

@@ -7,7 +7,8 @@ using TMPro;
 
 public class WindowGraph : MonoBehaviour
 {
-    [SerializeField] private TextMeshProUGUI heading;
+    [SerializeField] private TextMeshProUGUI headingText;
+    [SerializeField] private TextMeshProUGUI yLabelText;
     [SerializeField] private Sprite circleSprite;
     [SerializeField] private RectTransform graphContainer;
     [SerializeField] private RectTransform labelTemplateX;
@@ -22,17 +23,13 @@ public class WindowGraph : MonoBehaviour
     private int gamesPlayed = 0;
 
     private List<float> valueList_cached;
-    private List<float> valueList1 = new List<float>() { 5, 3, 56, 27, 80, 46, 51, 10, 100, 100 };
-    private List<float> valueList2 = new List<float>() { 80, 46, 72, 20, 30, 50, 40, 15, 6, 5 };
-    private List<float> valueList3 = new List<float>() { 20, 30, 10, 20, 50, 10, 10, 50, 61, 40 };
-    private List<float> valueList4 = new List<float>() { 5f, 3f, 56f, 27f, 80f, 46f, 51f, 10f, 100f, 101.05f };
 
     private List<float> scoreList = new List<float>();
-    private List<float> timeToKillList = new List<float>();
     private List<float> accuracyList = new List<float>();
     private List<float> targetsHitList = new List<float>();
     private List<float> timeList = new List<float>();
     private List<float> killsPerSecList = new List<float>();
+    private List<float> timeToKillList = new List<float>();
 
 
 
@@ -49,7 +46,12 @@ public class WindowGraph : MonoBehaviour
     private void LoadSavedStats()
     {
         scoreList.Clear();
+        accuracyList.Clear();
+        targetsHitList.Clear();
+        timeList.Clear();
+        killsPerSecList.Clear();
         timeToKillList.Clear();
+
         gamesPlayed = 0;
         SessionData sessionData = SaveSystem.LoadSession();
         foreach (SessionData_instance instance in sessionData.session_list)
@@ -64,9 +66,34 @@ public class WindowGraph : MonoBehaviour
                 killsPerSecList.Add(instance.kills_per_sec);
                 timeToKillList.Add(instance.time_to_kill);
             }
+            else if (levelType == levelEnum.MOVING && instance.level_name == "Moving targets")
+            {
+                gamesPlayed++;
+                scoreList.Add(instance.score);
+                accuracyList.Add(instance.accuracy);
+                targetsHitList.Add(LevelStats.BASIC_TARGETS_MAX - instance.targets_missed);
+                timeList.Add(instance.session_time);
+                killsPerSecList.Add(instance.kills_per_sec);
+                timeToKillList.Add(instance.time_to_kill);
+            }
+            else if (levelType == levelEnum.ANTICIPATION && instance.level_name == "Anticipation targets")
+            {
+                gamesPlayed++;
+                scoreList.Add(instance.score);
+                accuracyList.Add(instance.accuracy);
+                targetsHitList.Add(LevelStats.BASIC_TARGETS_MAX - instance.targets_missed);
+                timeList.Add(instance.session_time);
+                killsPerSecList.Add(instance.kills_per_sec);
+                timeToKillList.Add(instance.time_to_kill);
+            }
         }
         scoreList.Reverse();
+        accuracyList.Reverse();
+        targetsHitList.Reverse();
+        timeList.Reverse();
+        killsPerSecList.Reverse();
         timeToKillList.Reverse();
+
         maxVisibleValueAmmountLimit = gamesPlayed;
     }
 
@@ -93,7 +120,8 @@ public class WindowGraph : MonoBehaviour
 
     public void ShowScoreGraph()
     {
-        heading.text = "Score";
+        headingText.text = "Score";
+        yLabelText.text = "Score";
         listContainsFloatVals = false;
         LoadSavedStats();
         valueList_cached = scoreList;
@@ -102,7 +130,8 @@ public class WindowGraph : MonoBehaviour
 
     public void ShowAccuracyGraph()
     {
-        heading.text = "Accuracy";
+        headingText.text = "Accuracy";
+        yLabelText.text = "Precentage";
         listContainsFloatVals = false;
         LoadSavedStats();
         valueList_cached = accuracyList;
@@ -111,7 +140,8 @@ public class WindowGraph : MonoBehaviour
 
     public void ShowTargetsHitGraph()
     {
-        heading.text = "Targets hit";
+        headingText.text = "Targets hit";
+        yLabelText.text = "Target count";
         listContainsFloatVals = false;
         LoadSavedStats();
         valueList_cached = targetsHitList;
@@ -120,7 +150,8 @@ public class WindowGraph : MonoBehaviour
 
     public void ShowTimeGraph()
     {
-        heading.text = "Time";
+        headingText.text = "Time";
+        yLabelText.text = "Seconds";
         listContainsFloatVals = false;
         LoadSavedStats();
         valueList_cached = timeList;
@@ -129,7 +160,8 @@ public class WindowGraph : MonoBehaviour
 
     public void ShowKillsPerSecGraph()
     {
-        heading.text = "Kills per second";
+        headingText.text = "Kills per second";
+        yLabelText.text = "Kill count";
         listContainsFloatVals = true;
         LoadSavedStats();
         valueList_cached = killsPerSecList;
@@ -138,7 +170,8 @@ public class WindowGraph : MonoBehaviour
 
     public void ShowTimeToKillGraph()
     {
-        heading.text = "Time to kill";
+        headingText.text = "Time to kill";
+        yLabelText.text = "Milliseconds";
         listContainsFloatVals = false;
         LoadSavedStats();
         valueList_cached = timeToKillList;
@@ -147,10 +180,7 @@ public class WindowGraph : MonoBehaviour
 
     private void Start()
     {
-        //Grid grid = new Grid(4, 3, 50f);
         gameObjectList = new List<GameObject>();
-        //valueList_cached = valueList1;
-        //ShowGraph(valueList_cached);
         ShowScoreGraph();
     }
     private GameObject CreateCircle(Vector2 anchoredPosition)
