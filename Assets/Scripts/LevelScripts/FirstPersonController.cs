@@ -11,6 +11,14 @@ namespace StarterAssets
 #endif
 	public class FirstPersonController : MonoBehaviour
 	{
+		public float rotationSpeed = 6;
+		public float returnSpeed = 25;
+
+		public Vector3 RecoilRotation = new Vector3(2f, 2f, 2f);
+
+		private Vector3 currentRotation;
+		private Vector3 Rot;
+
 		[Header("Player")]
 		[Tooltip("Move speed of the character in m/s")]
 		public float MoveSpeed = 4.0f;
@@ -95,15 +103,24 @@ namespace StarterAssets
 
 		private void Update()
 		{
+			if (Input.GetButtonDown("Fire1"))
+			{
+				Fire();
+			}
 			JumpAndGravity();
 			GroundedCheck();
 			Move();
 		}
 
-		private void LateUpdate()
+        private void LateUpdate()
 		{
-			CameraRotation();
-		}
+            CameraRotation();
+        }
+
+		public void Fire()
+		{
+            currentRotation += new Vector3(_cinemachineTargetPitch - RecoilRotation.x, Random.Range(-RecoilRotation.y, RecoilRotation.y), Random.Range(-RecoilRotation.z, RecoilRotation.z));
+        }
 
 		private void GroundedCheck()
 		{
@@ -114,24 +131,22 @@ namespace StarterAssets
 
 		private void CameraRotation()
 		{
-			// if there is an input
-			if (_input.look.sqrMagnitude >= _threshold)
-			{
-				//Don't multiply mouse input by Time.deltaTime
-				float deltaTimeMultiplier = IsCurrentDeviceMouse ? 1.0f : Time.deltaTime;
+			//Don't multiply mouse input by Time.deltaTime
+			float deltaTimeMultiplier = IsCurrentDeviceMouse ? 1.0f : Time.deltaTime;
 				
-				_cinemachineTargetPitch += _input.look.y * RotationSpeed * deltaTimeMultiplier;
-				_rotationVelocity = _input.look.x * RotationSpeed * deltaTimeMultiplier;
+			_cinemachineTargetPitch += _input.look.y * RotationSpeed * deltaTimeMultiplier;
+			_rotationVelocity = _input.look.x * RotationSpeed * deltaTimeMultiplier;
 
-				// clamp our pitch rotation
-				_cinemachineTargetPitch = ClampAngle(_cinemachineTargetPitch, BottomClamp, TopClamp);
+			// clamp our pitch rotation
+			_cinemachineTargetPitch = ClampAngle(_cinemachineTargetPitch, BottomClamp, TopClamp);
 
-				// Update Cinemachine camera target pitch
-				CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(_cinemachineTargetPitch, 0.0f, 0.0f);
+			// Update Cinemachine camera target pitch
+			currentRotation = Vector3.Lerp(currentRotation, Vector3.zero, returnSpeed * Time.deltaTime);
+			Rot = Vector3.Slerp(Rot, currentRotation, rotationSpeed * Time.fixedDeltaTime);
+			CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(Rot.x + _cinemachineTargetPitch, Rot.y, Rot.z);
 
-				// rotate the player left and right
-				transform.Rotate(Vector3.up * _rotationVelocity);
-			}
+			// rotate the player left and right
+			transform.Rotate(Vector3.up * _rotationVelocity);
 		}
 
 		private void Move()
