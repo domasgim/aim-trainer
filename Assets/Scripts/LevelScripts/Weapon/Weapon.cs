@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using StarterAssets;
 
-public class Gun : MonoBehaviour
+public class Weapon : MonoBehaviour
 {
     public bool automatic = true;
     public float fireRate = 10f;
@@ -15,6 +16,9 @@ public class Gun : MonoBehaviour
     public Animator animator;
 
     private float nextTimeToFire = 0f;
+
+    public WeaponManager weaponManager;
+    public FirstPersonController firstPersonController;
 
     private void Start()
     {
@@ -50,6 +54,7 @@ public class Gun : MonoBehaviour
             if (Input.GetButton("Fire1") && Time.time >= nextTimeToFire)
             {
                 nextTimeToFire = Time.time + 1f / fireRate;
+                firstPersonController.Fire();
                 Shoot();
             }
         } 
@@ -58,11 +63,18 @@ public class Gun : MonoBehaviour
             if (Input.GetButtonDown("Fire1") && Time.time >= nextTimeToFire)
             {
                 nextTimeToFire = Time.time + 1f / fireRate;
+                firstPersonController.Fire();
                 Shoot();
             }
         }
+        UpdateManager();
     }
 
+    void UpdateManager()
+    {
+        weaponManager.currentAmmo = currentAmmo;
+        weaponManager.maxAmmo = maxAmmo;
+    }
     void Shoot()
     {
         muzzleFlash.Play();

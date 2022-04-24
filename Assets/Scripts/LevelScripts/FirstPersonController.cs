@@ -103,10 +103,6 @@ namespace StarterAssets
 
 		private void Update()
 		{
-			if (Input.GetButtonDown("Fire1"))
-			{
-				Fire();
-			}
 			JumpAndGravity();
 			GroundedCheck();
 			Move();

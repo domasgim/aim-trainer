@@ -1,10 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
-public class WeaponSwitching : MonoBehaviour
+
+public class WeaponManager : MonoBehaviour
 {
     public int selectedWeapon = 0;
+
+    public int currentAmmo;
+    public int maxAmmo;
+    public bool automatic;
+
+    public bool canFire = false;
+    public TextMeshProUGUI ammoText;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -58,6 +68,12 @@ public class WeaponSwitching : MonoBehaviour
         {
             SelectWeapon();
         }
+        UpdateAmmoText();
+    }
+
+    void UpdateAmmoText()
+    {
+        ammoText.text = "Ammo: " + currentAmmo + "/" + maxAmmo;
     }
 
     void SelectWeapon()
