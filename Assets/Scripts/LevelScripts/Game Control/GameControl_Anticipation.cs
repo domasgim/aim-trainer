@@ -116,60 +116,6 @@ public class GameControl_Anticipation : MonoBehaviour
         {
             PrintTime();
 
-            // Mouse 1 pressed
-            if (Input.GetMouseButtonDown(0))
-            {
-                Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f));
-                if (Physics.Raycast(ray, out RaycastHit hit))
-                {
-                    Target_Anticipation target = hit.collider.gameObject.GetComponent<Target_Anticipation>();
-
-                    // A target is hit
-                    if (target != null)
-                    {
-                        if (gameStatus == gameStatusEnum.STANDBY)
-                        {
-                            gameStatus = gameStatusEnum.STARTED;
-                            target.Hit(hit.point);
-                            SpawnRandomPath();
-                            DestroyTrigger();
-                        }
-                        else if (gameStatus == gameStatusEnum.STARTED)
-                        {
-                            int hitReturn = 0;
-                            if ((hitReturn = target.Hit(hit.point)) != 0)
-                            {
-                                activeTargetTime += currentTime;
-                                if (targetsHit < targetsAmmountInitial)
-                                {
-                                    time_to_kill = (int)(currentTime * 1000);
-                                    score += hitReturn;
-                                    targetsHit++;
-                                    targetNumber++;
-                                    if (targetsHit == targetsAmmountInitial)
-                                    {
-                                        shotsFired++;
-                                        gameStatus = gameStatusEnum.FINISHED;
-                                        targetStatus = targetStatusEnum.TARGETS_DISABLED;
-                                        target.DisableTarget();
-                                    }
-                                    else
-                                    {
-                                        shotsFired++;
-                                        SpawnRandomPath();
-                                    }
-                                }
-                                currentTime = 0f;
-                            }
-                        }
-                    }
-                }
-                if (targetStatus == targetStatusEnum.TARGETS_ENABLED)
-                {
-                    shotsFired++;
-                }
-                PrintResults();
-            }
             if (gameStatus != gameStatusEnum.FINISHED)
             {
                 Cursor.visible = false;
@@ -191,7 +137,6 @@ public class GameControl_Anticipation : MonoBehaviour
             }
         } else if (gameStatus == gameStatusEnum.FINISHED)
         {
-            Debug.Log("VISKAS");
             resultsPanel.SetActive(false);
             finalResultsPanel.SetActive(true);
             Cursor.visible = true;
@@ -200,6 +145,59 @@ public class GameControl_Anticipation : MonoBehaviour
             playerFollowCamera.SetActive(false);
             PrintTime();
         }
+    }
+    public void ShootRay()
+    {
+        Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f));
+        if (Physics.Raycast(ray, out RaycastHit hit))
+        {
+            Target_Anticipation target = hit.collider.gameObject.GetComponent<Target_Anticipation>();
+
+            // A target is hit
+            if (target != null)
+            {
+                if (gameStatus == gameStatusEnum.STANDBY)
+                {
+                    gameStatus = gameStatusEnum.STARTED;
+                    target.Hit(hit.point);
+                    SpawnRandomPath();
+                    DestroyTrigger();
+                }
+                else if (gameStatus == gameStatusEnum.STARTED)
+                {
+                    int hitReturn = 0;
+                    if ((hitReturn = target.Hit(hit.point)) != 0)
+                    {
+                        activeTargetTime += currentTime;
+                        if (targetsHit < targetsAmmountInitial)
+                        {
+                            time_to_kill = (int)(currentTime * 1000);
+                            score += hitReturn;
+                            targetsHit++;
+                            targetNumber++;
+                            if (targetsHit == targetsAmmountInitial)
+                            {
+                                shotsFired++;
+                                gameStatus = gameStatusEnum.FINISHED;
+                                targetStatus = targetStatusEnum.TARGETS_DISABLED;
+                                target.DisableTarget();
+                            }
+                            else
+                            {
+                                shotsFired++;
+                                SpawnRandomPath();
+                            }
+                        }
+                        currentTime = 0f;
+                    }
+                }
+            }
+        }
+        if (targetStatus == targetStatusEnum.TARGETS_ENABLED)
+        {
+            shotsFired++;
+        }
+        PrintResults();
     }
 
     private void PrintResults()

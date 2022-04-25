@@ -5,6 +5,19 @@ using StarterAssets;
 
 public class Weapon : MonoBehaviour
 {
+    public enum levelEnum
+    {
+        BASIC,
+        ANTICIPATION,
+        MOVING
+    }
+
+    [SerializeField]
+    private levelEnum levelType = levelEnum.BASIC;
+    public GameControl gameControlBasic;
+    public GameControl_Moving gameControlMoving;
+    public GameControl_Anticipation gameControlAnticipation;
+
     public bool automatic = true;
     public float fireRate = 10f;
     public ParticleSystem muzzleFlash;
@@ -56,6 +69,7 @@ public class Weapon : MonoBehaviour
                 nextTimeToFire = Time.time + 1f / fireRate;
                 firstPersonController.Fire();
                 Shoot();
+                ShootGameControlRay();
             }
         } 
         else
@@ -65,31 +79,50 @@ public class Weapon : MonoBehaviour
                 nextTimeToFire = Time.time + 1f / fireRate;
                 firstPersonController.Fire();
                 Shoot();
+                ShootGameControlRay();
             }
         }
         UpdateManager();
+    }
+
+    void ShootGameControlRay()
+    {
+        if (levelType == levelEnum.BASIC)
+        {
+            gameControlBasic.ShootRay();
+        } 
+        else if (levelType == levelEnum.MOVING)
+        {
+            gameControlMoving.ShootRay();
+        }
+        else if (levelType == levelEnum.ANTICIPATION)
+        {
+            gameControlAnticipation.ShootRay();
+        }
     }
 
     void UpdateManager()
     {
         weaponManager.currentAmmo = currentAmmo;
         weaponManager.maxAmmo = maxAmmo;
+        weaponManager.automatic = automatic;
+        if (Time.time >= nextTimeToFire)
+        {
+            weaponManager.canFire = true;
+        } else
+        {
+            weaponManager.canFire = false;
+        }
     }
     void Shoot()
     {
         muzzleFlash.Play();
         currentAmmo--;
-        //RaycastHit hit;
-        //if (Physics.Raycast(fpsCam.transform.position, fpsCam.transform.forward, out hit))
-        //{
-        //    Debug.Log(hit.transform.name);
-        //}
     }
 
     IEnumerator Reload()
     {
         isReloading = true;
-        Debug.Log("Reloading...");
         animator.SetBool("Reloading", true);
         yield return new WaitForSeconds(reloadTime - .25f);
         animator.SetBool("Reloading", false);

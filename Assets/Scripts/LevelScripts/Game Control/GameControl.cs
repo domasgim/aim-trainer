@@ -108,63 +108,10 @@ public class GameControl : MonoBehaviour
             PrintTime();
 
             // Mouse 1 pressed
-            if (Input.GetMouseButtonDown(0))
-            {
-                Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f));
-                if (Physics.Raycast(ray, out RaycastHit hit))
-                {
-                    Target target = hit.collider.gameObject.GetComponent<Target>();
-
-                    // A target is hit
-                    if (target != null)
-                    {
-                        if (gameStatus == gameStatusEnum.STANDBY)
-                        {
-                            gameStatus = gameStatusEnum.STARTED;
-                            target.EnableTarget();
-                            target.Hit(hit.point);
-                            targetTime = 0f;
-
-                            // This is nessecary because it doesn't make sense
-                            // to count a shot if it is fired to start the game
-                            shotsFired--;
-                        }
-                        else if (gameStatus == gameStatusEnum.STARTED)
-                        {
-                            //score += 10;
-                            targetsHit++;
-                            targetNumber++;
-
-                            // If all the targets are hit
-                            if (targetNumber == targetsAmmountInitial)
-                            {
-                                pauseStatus = pauseStatusEnum.PAUSED;
-                                gameStatus = gameStatusEnum.FINISHED;
-                                score += target.Hit(hit.point);
-                                time_to_kill = (int)(targetTime * 1000);
-                                targetTime = 0f;
-
-                                // We add a last shot because the shot counting
-                                // logic will not work after this line
-                                shotsFired++;
-                            }
-                            else
-                            {
-                                score += target.Hit(hit.point);
-                                time_to_kill = (int)(targetTime * 1000);
-                                targetTime = 0f;
-                            }
-                        }
-                    }
-                }
-                if (gameStatus == gameStatusEnum.STARTED)
-                {
-                    shotsFired++;
-                }
-
-                PrintResults();
-
-            }
+            //if (Input.GetMouseButtonDown(0))
+            //{
+            //    ShootRay();
+            //}
             if (targetTime > singleTargetLifeTime)
             {
                 targetNumber++;
@@ -186,6 +133,63 @@ public class GameControl : MonoBehaviour
             playerFollowCamera.SetActive(false);
             PrintTime();
         }
+    }
+
+    public void ShootRay()
+    {
+        Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f));
+        if (Physics.Raycast(ray, out RaycastHit hit))
+        {
+            Target target = hit.collider.gameObject.GetComponent<Target>();
+
+            // A target is hit
+            if (target != null)
+            {
+                if (gameStatus == gameStatusEnum.STANDBY)
+                {
+                    gameStatus = gameStatusEnum.STARTED;
+                    target.EnableTarget();
+                    target.Hit(hit.point);
+                    targetTime = 0f;
+
+                    // This is nessecary because it doesn't make sense
+                    // to count a shot if it is fired to start the game
+                    shotsFired--;
+                }
+                else if (gameStatus == gameStatusEnum.STARTED)
+                {
+                    //score += 10;
+                    targetsHit++;
+                    targetNumber++;
+
+                    // If all the targets are hit
+                    if (targetNumber == targetsAmmountInitial)
+                    {
+                        pauseStatus = pauseStatusEnum.PAUSED;
+                        gameStatus = gameStatusEnum.FINISHED;
+                        score += target.Hit(hit.point);
+                        time_to_kill = (int)(targetTime * 1000);
+                        targetTime = 0f;
+
+                        // We add a last shot because the shot counting
+                        // logic will not work after this line
+                        shotsFired++;
+                    }
+                    else
+                    {
+                        score += target.Hit(hit.point);
+                        time_to_kill = (int)(targetTime * 1000);
+                        targetTime = 0f;
+                    }
+                }
+            }
+        }
+        if (gameStatus == gameStatusEnum.STARTED)
+        {
+            shotsFired++;
+        }
+
+        PrintResults();
     }
 
     private void PrintResults()
