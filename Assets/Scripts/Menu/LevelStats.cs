@@ -6,7 +6,7 @@ namespace AimTrainer.Utils
 {
     public class LevelStats
     {
-        public static int BASIC_SCORE_MAX = 300;
+        public static int BASIC_SCORE_MAX = 100 * BASIC_TARGETS_MAX;
         // Slowest time
         public static int BASIC_TIME_MAX = 10;
         // Fastest time
@@ -17,7 +17,7 @@ namespace AimTrainer.Utils
         public static int BASIC_TTK_MIN = 50;
         public static int BASIC_TARGETS_MAX = 3;
 
-        public static int MOVING_SCORE_MAX = 300;
+        public static int MOVING_SCORE_MAX = 100 * MOVING_TARGETS_MAX;
         // Slowest time
         public static int MOVING_TIME_MAX = 10;
         // Fastest time
@@ -28,7 +28,7 @@ namespace AimTrainer.Utils
         public static int MOVING_TTK_MIN = 50;
         public static int MOVING_TARGETS_MAX = 3;
 
-        public static int ANTICIPATION_SCORE_MAX = 300;
+        public static int ANTICIPATION_SCORE_MAX = 100 * ANTICIPATION_TARGETS_MAX;
         // Slowest time
         public static int ANTICIPATION_TIME_MAX = 30;
         // Fastest time

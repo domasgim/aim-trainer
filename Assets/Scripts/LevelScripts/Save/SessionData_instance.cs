@@ -13,6 +13,7 @@ public class SessionData_instance
     public int targets_missed;
     public float session_time;
     public int unix_timestamp;
+    public int consecutive_targets_hit;
 
     public SessionData_instance()
     {
@@ -24,6 +25,7 @@ public class SessionData_instance
         targets_missed = 0;
         session_time = 0;
         unix_timestamp = 0;
+        consecutive_targets_hit = 0;
     }
 
     public SessionData_instance(SessionData_instance sessionData)
@@ -36,5 +38,6 @@ public class SessionData_instance
         targets_missed = sessionData.targets_missed;
         session_time = sessionData.session_time;
         unix_timestamp = sessionData.unix_timestamp;
+        consecutive_targets_hit = sessionData.consecutive_targets_hit;
     }
 }

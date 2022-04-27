@@ -29,14 +29,17 @@ public class AchievementManager : MonoBehaviour
         }
     }
 
-    // Start is called before the first frame update
-    void Start()
+    private void Awake()
     {
-        Debug.Log("Loading achievements...");
         LoadAchievements();
         activeButton = GameObject.Find("GeneralButton (1)").GetComponent<AchievementButton>();
         activeButton.Click();
         achievementMenu.SetActive(false);
+    }
+
+    // Start is called before the first frame update
+    void Start()
+    {
     }
 
     public void ActivateAchievementMenu()

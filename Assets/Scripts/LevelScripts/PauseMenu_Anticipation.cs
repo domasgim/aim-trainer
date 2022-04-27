@@ -92,6 +92,7 @@ public class PauseMenu_Anticipation : MonoBehaviour
         sessionData_instance.targets_missed = gameControl.targetsAmmountInitial - gameControl.targetsHit;
         sessionData_instance.session_time = gameControl.sessionTime;
         sessionData_instance.unix_timestamp = (int)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
+        sessionData_instance.consecutive_targets_hit = gameControl.consecutive_hits_max;
 
         SaveSystem.SaveSession(sessionData_instance);
         SceneManager.LoadScene(0);

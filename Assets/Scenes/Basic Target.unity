@@ -7797,6 +7797,8 @@ MonoBehaviour:
   targetsHit: 0
   time_to_kill: 0
   kills_per_second: 0
+  consecutive_hits_max: 0
+  consecutive_hits_current: 0
   accuracy: 0
   currentTime: 0
   singleTargetLifeTime: 3

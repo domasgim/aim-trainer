@@ -33,7 +33,7 @@ public class GameControl : MonoBehaviour
     [SerializeField]
     public GameObject playerFollowCamera;
 
-    public int score, targetsHit, time_to_kill, kills_per_second;
+    public int score, targetsHit, time_to_kill, kills_per_second, consecutive_hits_max, consecutive_hits_current;
 
     /// <summary>
     /// Total targets including missed ones
@@ -80,6 +80,7 @@ public class GameControl : MonoBehaviour
         targetTime = 0;
         time_to_kill = 0;
         kills_per_second = 0;
+        consecutive_hits_max = 0;
 
         score = 0;
         shotsFired = 0;
@@ -107,11 +108,6 @@ public class GameControl : MonoBehaviour
             }
             PrintTime();
 
-            // Mouse 1 pressed
-            //if (Input.GetMouseButtonDown(0))
-            //{
-            //    ShootRay();
-            //}
             if (targetTime > singleTargetLifeTime)
             {
                 targetNumber++;
@@ -145,6 +141,14 @@ public class GameControl : MonoBehaviour
             // A target is hit
             if (target != null)
             {
+                if (gameStatus == gameStatusEnum.STARTED)
+                {
+                    consecutive_hits_current++;
+                }
+                if (consecutive_hits_current > consecutive_hits_max)
+                {
+                    consecutive_hits_max = consecutive_hits_current;
+                }
                 if (gameStatus == gameStatusEnum.STANDBY)
                 {
                     gameStatus = gameStatusEnum.STARTED;
@@ -182,6 +186,10 @@ public class GameControl : MonoBehaviour
                         targetTime = 0f;
                     }
                 }
+            } 
+            else
+            { 
+                consecutive_hits_current = 0;
             }
         }
         if (gameStatus == gameStatusEnum.STARTED)

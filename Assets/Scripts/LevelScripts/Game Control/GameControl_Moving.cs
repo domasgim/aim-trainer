@@ -33,7 +33,7 @@ public class GameControl_Moving : MonoBehaviour
     [SerializeField]
     public GameObject playerFollowCamera;
 
-    public int score, targetsHit, time_to_kill;
+    public int score, targetsHit, time_to_kill, consecutive_hits_max, consecutive_hits_current;
 
     /// <summary>
     /// Total targets including missed ones
@@ -74,6 +74,8 @@ public class GameControl_Moving : MonoBehaviour
         currentTime = 0;
         targetTime = 0;
         time_to_kill = 0;
+        consecutive_hits_current = 0;
+        consecutive_hits_max = 0;
 
         score = 0;
         shotsFired = 0;
@@ -139,6 +141,11 @@ public class GameControl_Moving : MonoBehaviour
             // A target is hit
             if (target != null)
             {
+                consecutive_hits_current++;
+                if (consecutive_hits_current > consecutive_hits_max)
+                {
+                    consecutive_hits_max = consecutive_hits_current;
+                }
                 if (gameStatus == gameStatusEnum.STANDBY)
                 {
                     gameStatus = gameStatusEnum.STARTED;
@@ -178,6 +185,10 @@ public class GameControl_Moving : MonoBehaviour
                         targetTime = 0f;
                     }
                 }
+            }
+            else
+            {
+                consecutive_hits_current = 0;
             }
         }
         if (gameStatus == gameStatusEnum.STARTED)
