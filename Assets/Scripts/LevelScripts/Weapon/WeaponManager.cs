@@ -71,12 +71,12 @@ public class WeaponManager : MonoBehaviour
         UpdateAmmoText();
     }
 
-    void UpdateAmmoText()
+    public void UpdateAmmoText()
     {
         ammoText.text = "Ammo: " + currentAmmo + "/" + maxAmmo;
     }
 
-    void SelectWeapon()
+    public void SelectWeapon()
     {
         int i = 0;
         foreach (Transform weapon in transform)

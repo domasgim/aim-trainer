@@ -56,7 +56,7 @@ public class PauseMenu_Anticipation : MonoBehaviour
         GameIsPaused = false;
     }
 
-    void Pause()
+    public void Pause()
     {
         gameControl.pauseStatus = GameControl_Anticipation.pauseStatusEnum.PAUSED;
         Cursor.visible = true;

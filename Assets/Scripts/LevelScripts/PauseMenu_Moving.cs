@@ -56,7 +56,7 @@ public class PauseMenu_Moving : MonoBehaviour
         GameIsPaused = false;
     }
 
-    void Pause()
+    public void Pause()
     {
         gameControl.pauseStatus = GameControl_Moving.pauseStatusEnum.PAUSED;
         Cursor.visible = true;

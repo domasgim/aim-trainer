@@ -26,7 +26,7 @@ public class AchievementChecker : MonoBehaviour
     {
         Time.timeScale = 1f;
         ResetValues();
-        PlayerPrefs.DeleteAll();
+        //PlayerPrefs.DeleteAll();
         LoadSavedStats();
         StopAllCoroutines();
         StartCoroutine(CheckForAchievements(1));

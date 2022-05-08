@@ -48,6 +48,14 @@ public class Weapon : MonoBehaviour
         animator.SetBool("Reloading", false);
     }
 
+    public void FireWeapon()
+    {
+        nextTimeToFire = Time.time + 1f / fireRate;
+        firstPersonController.Fire();
+        Shoot();
+        ShootGameControlRay();
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -66,20 +74,22 @@ public class Weapon : MonoBehaviour
         {
             if (Input.GetButton("Fire1") && Time.time >= nextTimeToFire)
             {
-                nextTimeToFire = Time.time + 1f / fireRate;
-                firstPersonController.Fire();
-                Shoot();
-                ShootGameControlRay();
+                FireWeapon();
+                //nextTimeToFire = Time.time + 1f / fireRate;
+                //firstPersonController.Fire();
+                //Shoot();
+                //ShootGameControlRay();
             }
         } 
         else
         {
             if (Input.GetButtonDown("Fire1") && Time.time >= nextTimeToFire)
             {
-                nextTimeToFire = Time.time + 1f / fireRate;
-                firstPersonController.Fire();
-                Shoot();
-                ShootGameControlRay();
+                FireWeapon();
+                //nextTimeToFire = Time.time + 1f / fireRate;
+                //firstPersonController.Fire();
+                //Shoot();
+                //ShootGameControlRay();
             }
         }
         UpdateManager();

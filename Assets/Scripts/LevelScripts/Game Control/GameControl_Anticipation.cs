@@ -5,7 +5,6 @@ using UnityEngine.UI;
 using System;
 using PathCreation;
 using PathCreation.Examples;
-using UnityEngine;
 using TMPro;
 using Random = System.Random;
 
