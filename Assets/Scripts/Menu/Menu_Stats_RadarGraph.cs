@@ -124,10 +124,13 @@ public class Menu_Stats_RadarGraph : MonoBehaviour
             }
         }
 
+        Debug.Log("Save_ttk = " + save_time_to_kill);
+
         if (gamesPlayed > 0)
         {
             save_score /= gamesPlayed;
             save_time_to_kill /= gamesPlayed;
+            Debug.Log("Save_ttk padalintas = " + save_time_to_kill + " padalinta is " + gamesPlayed);
             save_targets_missed /= gamesPlayed;
             save_accuracy /= gamesPlayed;
             save_kills_per_sec /= gamesPlayed;
@@ -248,7 +251,9 @@ public class Menu_Stats_RadarGraph : MonoBehaviour
         }
 
         killsPerSecond = (int)(((save_kills_per_sec - kps_min) * 100) / kps_max - kps_min);
+        Debug.Log(save_time_to_kill + " - " + ttk_min + " * 100 / " + (ttk_max - ttk_min));
         timeToKill = (int)((save_time_to_kill - ttk_min) * 100 / (ttk_max - ttk_min));
+        Debug.Log("ttk = " + timeToKill);
 
         DrawChart();
         PrintText();
