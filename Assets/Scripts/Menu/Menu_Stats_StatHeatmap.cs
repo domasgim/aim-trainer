@@ -172,6 +172,52 @@ public class Menu_Stats_StatHeatmap : MonoBehaviour
             time = 0;
         }
 
+        // invert this too
+        if (timeToKill != 0)
+        {
+            timeToKill = 100 - timeToKill;
+        }
+
+        if (timeToKill > 100)
+        {
+            timeToKill = 100;
+        } else if (timeToKill < 0)
+        {
+            timeToKill = 0;
+        }
+
+        if (gamesPlayed == 0)
+        {
+            timeToKill = 0;
+            targetsHit = 0;
+            time = 0;
+        }
+
+        if (timeToKill > 100)
+            timeToKill = 100;
+        if (timeToKill < 0)
+            timeToKill = 0;
+        if (score > 100)
+            score = 100;
+        if (score < 0)
+            score = 0;
+        if (accuracy > 100)
+            accuracy = 100;
+        if (accuracy < 0)
+            accuracy = 0;
+        if (targetsHit > 100)
+            targetsHit = 100;
+        if (targetsHit < 0)
+            targetsHit = 0;
+        if (time > 100)
+            time = 100;
+        if (time < 0)
+            time = 0;
+        if (killsPerSecond > 100)
+            killsPerSecond = 100;
+        if (killsPerSecond < 0)
+            killsPerSecond = 0;
+
         // We invert these values in refrence to 100 because we want to represent
         // minimum values in green and maximum values in red in HSV format
         score = 100 - score;
@@ -180,6 +226,7 @@ public class Menu_Stats_StatHeatmap : MonoBehaviour
         time = 100 - time;
         killsPerSecond = 100 - killsPerSecond;
         timeToKill = 100 - timeToKill;
+
 
         statArray[((int)levelType), ((int)statTypeEnum.SCORE)] = score;
         statArray[((int)levelType), ((int)statTypeEnum.ACCURACY)] = accuracy;

@@ -250,10 +250,37 @@ public class Menu_Stats_RadarGraph : MonoBehaviour
             time = 0;
         }
 
+
         killsPerSecond = (int)(((save_kills_per_sec - kps_min) * 100) / kps_max - kps_min);
         Debug.Log(save_time_to_kill + " - " + ttk_min + " * 100 / " + (ttk_max - ttk_min));
         timeToKill = (int)((save_time_to_kill - ttk_min) * 100 / (ttk_max - ttk_min));
+        timeToKill = 100 - timeToKill;
         Debug.Log("ttk = " + timeToKill);
+
+        if (timeToKill > 100)
+            timeToKill = 100;
+        if (timeToKill < 0)
+            timeToKill = 0;
+        if (score > 100)
+            score = 100;
+        if (score < 0)
+            score = 0;
+        if (accuracy > 100)
+            accuracy = 100;
+        if (accuracy < 0)
+            accuracy = 0;
+        if (targetsHit > 100)
+            targetsHit = 100;
+        if (targetsHit < 0)
+            targetsHit = 0;
+        if (time > 100)
+            time = 100;
+        if (time < 0)
+            time = 0;
+        if (killsPerSecond > 100)
+            killsPerSecond = 100;
+        if (killsPerSecond < 0)
+            killsPerSecond = 0;
 
         DrawChart();
         PrintText();

@@ -224,7 +224,7 @@ public class GameControl_Anticipation : MonoBehaviour
         finalTargetsHitText.text = "Targets Hit: " + targetsHit + "/" + targetsAmmountInitial;
         finalShotsFiredText.text = "Shots Fired: " + shotsFired;
         finalAccuracyText.text = "Accuracy: " + accuracy.ToString("N2") + " %";
-        finalCurrentTimeText.text = "Time: -";
+        //finalCurrentTimeText.text = "Time: -";
     }
 
     private void PrintTime()

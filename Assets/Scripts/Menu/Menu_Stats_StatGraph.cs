@@ -58,6 +58,7 @@ public class Menu_Stats_StatGraph : MonoBehaviour
         {
             if (levelType == levelEnum.BASIC && instance.level_name == "Basic targets")
             {
+                Debug.Log("1. Boop");
                 gamesPlayed++;
                 scoreList.Add(instance.score);
                 accuracyList.Add(instance.accuracy);
@@ -68,6 +69,7 @@ public class Menu_Stats_StatGraph : MonoBehaviour
             }
             else if (levelType == levelEnum.MOVING && instance.level_name == "Moving targets")
             {
+                Debug.Log("2. Beep");
                 gamesPlayed++;
                 scoreList.Add(instance.score);
                 accuracyList.Add(instance.accuracy);
@@ -78,6 +80,7 @@ public class Menu_Stats_StatGraph : MonoBehaviour
             }
             else if (levelType == levelEnum.ANTICIPATION && instance.level_name == "Anticipation targets")
             {
+                Debug.Log("3. Baap");
                 gamesPlayed++;
                 scoreList.Add(instance.score);
                 accuracyList.Add(instance.accuracy);
@@ -95,6 +98,8 @@ public class Menu_Stats_StatGraph : MonoBehaviour
         timeToKillList.Reverse();
 
         maxVisibleValueAmmountLimit = gamesPlayed;
+        Debug.Log("Games played = " + gamesPlayed);
+        Debug.Log("Scorelist.length = " + scoreList.Count);
     }
 
     public void SetLevelType(int levelTypeEnum)
